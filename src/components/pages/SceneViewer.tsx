@@ -1,8 +1,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Scene, Hotspot } from '../types';
+import { Scene, Hotspot } from '../../types';
 import { ArrowLeft, ChevronRight, ChevronLeft, Scan, List, X } from 'lucide-react';
-import DetailCard from './DetailCard';
+import DetailCard from '../ui/DetailCard';
 
 interface SceneViewerProps {
   scene: Scene;

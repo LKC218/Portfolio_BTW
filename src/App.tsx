@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { COLLECTIONS, getScenesForCollection } from './constants';
 import { Scene, Collection, AppState, Hotspot } from './types';
-import GridOverlay from './components/GridOverlay';
-import Gallery from './components/Gallery';
-import SceneViewer from './components/SceneViewer';
-import AudioPlayer from './components/AudioPlayer';
-import HomeSelection from './components/HomeSelection';
-import ThemeToggle from './components/ThemeToggle';
+import GridOverlay from './components/layout/GridOverlay';
+import Gallery from './components/pages/Gallery';
+import SceneViewer from './components/pages/SceneViewer';
+import AudioPlayer from './components/layout/AudioPlayer';
+import HomeSelection from './components/pages/HomeSelection';
+import ThemeToggle from './components/layout/ThemeToggle';
 
 const App: React.FC = () => {
   // Start at HOME directly

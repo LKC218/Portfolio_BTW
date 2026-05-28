@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Collection } from '../types';
+import { Collection } from '../../types';
 import { ArrowRight, Square } from 'lucide-react';
 
 interface HomeSelectionProps {
@@ -13,9 +13,7 @@ interface HomeSelectionProps {
 // [配置区域] 顶部 Hero 图片与文案配置
 // ============================================================================
 const HERO_CONFIG = {
-  // [替换说明]: 将此处 URL 换成你的本地图片路径，例如 '/assets/hero_bg.jpg'
-  // 建议使用 1920x1080 或更高分辨率的横图
-  image: 'https://picsum.photos/seed/endfield_style/1920/1080', 
+  image: '/assets/首页大图.jpg', 
   
   // 视觉主题色 (荧光绿)
   accentColor: '#CCFF00', 
@@ -27,7 +25,11 @@ const HERO_CONFIG = {
   slogan: '作品集 // LKC218',
   
   // 底部命令行文字
-  bottomLine: '>> - \\\\ SYSTEM_ROOT >> X: USERS >> 2026'
+  bottomLine: '>> - \\\\ SYSTEM_ROOT >> X: USERS >> 2026',
+  
+  // 日期显示
+  dateYear: '2026',
+  dateDay: '28'
 };
 
 const ITEMS_PER_GROUP = 3;

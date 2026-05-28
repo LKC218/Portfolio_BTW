@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Hotspot } from '../types';
+import { Hotspot } from '../../types';
 import { X, ScanLine, ZoomIn } from 'lucide-react';
 
 interface DetailCardProps {

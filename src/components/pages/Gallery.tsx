@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Scene, Collection } from '../types';
+import { Scene, Collection } from '../../types';
 import { MoveRight, Plus, Crosshair, ArrowLeft } from 'lucide-react';
 
 interface GalleryProps {
