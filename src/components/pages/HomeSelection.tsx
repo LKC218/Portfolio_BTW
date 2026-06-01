@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Collection } from '../../types';
 import { ArrowRight, Square } from 'lucide-react';
 
@@ -25,17 +25,28 @@ const HERO_CONFIG = {
   slogan: '作品集 // LKC218',
   
   // 底部命令行文字
-  bottomLine: '>> - \\\\ SYSTEM_ROOT >> X: USERS >> 2026',
-  
-  // 日期显示
-  dateYear: '2026',
-  dateDay: '28'
+  bottomLine: '>> - \\\\ SYSTEM_ROOT >> X: USERS >> 2026'
 };
 
 const ITEMS_PER_GROUP = 3;
 
+const formatTime = (date: Date): string => {
+  const h = String(date.getHours()).padStart(2, '0');
+  const m = String(date.getMinutes()).padStart(2, '0');
+  const s = String(date.getSeconds()).padStart(2, '0');
+  return `${h}:${m}:${s}`;
+};
+
 const HomeSelection: React.FC<HomeSelectionProps> = ({ collections, onSelect, onHover }) => {
   const [scrollTop, setScrollTop] = useState(0);
+  const [currentTime, setCurrentTime] = useState(() => formatTime(new Date()));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(formatTime(new Date()));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
   
   // Helper to chunk array into groups of 3
   const chunkedCollections = [];
@@ -123,18 +134,13 @@ const HomeSelection: React.FC<HomeSelectionProps> = ({ collections, onSelect, on
                                  </div>
                              </div>
 
-                             {/* Right Bottom: Huge Date & Title (The main visual anchor) */}
+                             {/* Right Bottom: Clock & Title (The main visual anchor) */}
                              <div className="flex flex-col items-start md:items-end text-left md:text-right">
                                  
-                                 {/* Year Label */}
-                                 <div className="text-white font-bold text-xl md:text-2xl tracking-widest mb-[-10px] md:mb-[-20px] relative z-10 ml-1 md:mr-1">
-                                     {HERO_CONFIG.dateYear}
-                                 </div>
-                                 
-                                 {/* Giant Date Numbers */}
-                                 <div className="text-[100px] md:text-[200px] leading-[0.85] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 drop-shadow-2xl"
+                                 {/* Real-time Clock */}
+                                 <div className="text-[100px] md:text-[200px] leading-[0.85] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 drop-shadow-2xl font-mono"
                                       style={{ WebkitTextStroke: '2px rgba(255,255,255,0.1)' }}>
-                                     {HERO_CONFIG.dateDay}
+                                     {currentTime}
                                  </div>
                                  
                                  {/* Highlight Bar with Text */}
@@ -146,7 +152,7 @@ const HomeSelection: React.FC<HomeSelectionProps> = ({ collections, onSelect, on
                                  
                                  {/* Version / Release Text */}
                                  <div className="mt-2 font-mono text-[10px] text-white/40 uppercase tracking-[0.5em]">
-                                     {HERO_CONFIG.dateYear} // Personal Work
+                                     LIVE // Personal Work
                                  </div>
                              </div>
                         </div>

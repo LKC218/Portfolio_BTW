@@ -11,16 +11,13 @@ interface SceneViewerProps {
 }
 
 const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelect }) => {
-  const activeHotspotRef = useRef<Hotspot | null>(null);
-  const [activeHotspot, _setActiveHotspot] = useState<Hotspot | null>(null);
+  const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  const setActiveHotspot = (h: Hotspot | null) => {
-      activeHotspotRef.current = h;
-      _setActiveHotspot(h);
-      // Bubble up the state to App for dynamic background effects
+  const handleHotspotSelect = (h: Hotspot | null) => {
+      setActiveHotspot(h);
       if (onHotspotSelect) {
           onHotspotSelect(h);
       }
@@ -101,7 +98,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                         key={hotspot.id}
                         onClick={(e) => {
                             e.stopPropagation();
-                            setActiveHotspot(isActive ? null : hotspot);
+                            handleHotspotSelect(isActive ? null : hotspot);
                         }}
                         className={`absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center group outline-none focus:outline-none transition-all duration-500`}
                         style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
@@ -176,7 +173,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                 >
                     <DetailCard 
                         hotspot={activeHotspot} 
-                        onClose={() => setActiveHotspot(null)} 
+                        onClose={() => handleHotspotSelect(null)} 
                         sceneTitle={scene.title}
                         accentColor={scene.color}
                         isMobile={isMobile}
@@ -215,7 +212,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                         {scene.hotspots.map((hotspot, idx) => (
                             <button
                                 key={hotspot.id}
-                                onClick={() => setActiveHotspot(hotspot)}
+                                onClick={() => handleHotspotSelect(hotspot)}
                                 className="group relative w-8 h-8 flex items-center justify-center"
                             >
                                 <span 
@@ -270,7 +267,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                                 <button
                                     key={hotspot.id}
                                     onClick={() => {
-                                        setActiveHotspot(isActive ? null : hotspot);
+                                        handleHotspotSelect(isActive ? null : hotspot);
                                         if (isMobile) setIsMenuOpen(false);
                                     }}
                                     className={`group relative flex items-center gap-4 p-3 w-full text-left border border-transparent transition-all duration-300 overflow-hidden ${isActive ? 'bg-surface/5 border-border/20' : 'hover:bg-surface/5 hover:border-border/10'}`}

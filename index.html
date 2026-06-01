@@ -63,6 +63,71 @@
       ::-webkit-scrollbar-thumb:hover {
         background: rgb(var(--muted) / 0.5);
       }
+      
+      /* Audio Player Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out;
+      }
+      
+      /* Custom range slider styling */
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 4px;
+        background: rgb(var(--border) / 0.2);
+        border-radius: 2px;
+        outline: none;
+      }
+      
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 12px;
+        height: 12px;
+        background: #10b981;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+      
+      input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+      
+      input[type="range"]::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+        background: #10b981;
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+      
+      /* Respect user motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        .animate-fadeIn,
+        .animate-ping,
+        .animate-pulse {
+          animation: none !important;
+        }
+        
+        .transition-all {
+          transition: none !important;
+        }
+      }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
