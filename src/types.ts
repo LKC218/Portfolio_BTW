@@ -6,6 +6,7 @@ export interface Hotspot {
   title: string;
   description: string;
   detailImage: string;
+  modelUrl?: string; // .glb / .gltf 3D 模型路径，未配置时回退为图片显示
 }
 
 export interface Scene {

@@ -1,7 +1,10 @@
 
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Hotspot } from '../../types';
-import { X, ScanLine, ZoomIn } from 'lucide-react';
+import { X, ScanLine, Maximize2, Box } from 'lucide-react';
+import ModelViewer from './ModelViewer';
+import FullscreenModelViewer from './FullscreenModelViewer';
 
 interface DetailCardProps {
   hotspot: Hotspot;
@@ -14,6 +17,7 @@ interface DetailCardProps {
 
 const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, accentColor, isMobile = false, onExpand }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFullscreenViewer, setIsFullscreenViewer] = useState(false);
 
   const handleExpand = (expanded: boolean) => {
     setIsExpanded(expanded);
@@ -87,7 +91,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
               {/* Zoom Overlay Hint */}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="flex items-center gap-2 px-3 py-1 bg-black/60 border border-white/20 rounded-full backdrop-blur-sm">
-                      <ZoomIn size={14} className="text-white" />
+                      <Maximize2 size={14} className="text-white" />
                       <span className="text-[10px] font-mono text-white uppercase tracking-wider">展开视图</span>
                   </div>
               </div>
@@ -118,8 +122,8 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
         )}
       </div>
 
-      {/* Full Screen Expanded View Modal */}
-      {isExpanded && (
+      {/* Full Screen Expanded View Modal (Portal to escape parent stacking context) */}
+      {isExpanded && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-10 animate-in fade-in duration-300">
             {/* Backdrop */}
             <div 
@@ -133,48 +137,52 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
             <div className="relative z-10 flex flex-col md:flex-row w-full h-full md:max-w-6xl md:h-auto md:max-h-[90vh] bg-surface md:border border-border/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
                  
                  {/* === TRANSITION WIPES === */}
-                 {/* 1. White flash leading edge */}
                  <div 
                     className="absolute inset-0 z-[60] bg-foreground pointer-events-none animate-[reveal-swipe_0.4s_cubic-bezier(0.87,0,0.13,1)_forwards]"
                     style={{ transformOrigin: 'right' }}
                  />
-                 {/* 2. Main Accent Block Wipe */}
                  <div 
                     className="absolute inset-0 z-[55] bg-[--accent-color] pointer-events-none animate-[reveal-swipe_0.6s_cubic-bezier(0.87,0,0.13,1)_forwards]"
                     style={{ 
                         '--accent-color': accentColor, 
                         transformOrigin: 'right',
-                        animationDelay: '0.05s' // Slight delay after white flash
+                        animationDelay: '0.05s'
                     } as React.CSSProperties}
                  />
 
                  {/* Close Button */}
                  <button 
                     onClick={() => handleExpand(false)}
-                    className="absolute top-4 right-4 z-20 p-2 bg-surface/50 hover:bg-[--accent-color] hover:text-background border border-border/10 text-foreground transition-all rounded-full opacity-0 animate-in fade-in fill-mode-forwards delay-500"
+                    className="absolute top-5 right-5 z-20 p-2 bg-surface/50 hover:bg-[--accent-color] hover:text-background border border-border/10 text-foreground transition-all rounded-full opacity-0 animate-in fade-in fill-mode-forwards delay-500"
                     style={{ '--accent-color': accentColor } as React.CSSProperties}
                  >
                     <X size={24} />
                  </button>
 
-                 {/* Large Image */}
+                 {/* Large Image / 3D Viewport */}
                  <div className="flex-1 relative bg-black flex items-center justify-center overflow-hidden group/modal-img">
-                    <img 
-                        src={hotspot.detailImage} 
-                        alt={hotspot.title} 
-                        className="max-w-full max-h-full object-contain animate-[image-scale-reveal_1s_cubic-bezier(0.22,1,0.36,1)_forwards]"
-                    />
+                    <>
+                        <ModelViewer accentColor={accentColor} modelUrl={hotspot.modelUrl} showHud={true} hudPadding="48px" />
+                        <button
+                            onClick={() => setIsFullscreenViewer(true)}
+                            className="absolute top-5 right-16 z-20 p-2 bg-surface/50 hover:bg-[--accent-color] hover:text-background border border-border/10 text-foreground transition-all rounded-full"
+                            style={{ '--accent-color': accentColor } as React.CSSProperties}
+                            title="放大查看"
+                        >
+                            <Maximize2 size={18} />
+                        </button>
+                    </>
                  </div>
 
                  {/* Info Panel */}
                  <div className="w-full md:w-96 flex-none bg-surface border-l border-border/10 p-6 md:p-8 flex flex-col justify-center relative overflow-hidden shrink-0 animate-in slide-in-from-right duration-700 fade-in fill-mode-forwards" style={{ animationDelay: '0.2s' }}>
-                      {/* Mobile-only Dragger for visual consistency */}
                       {isMobile && <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-border/10 rounded-full" />}
                       
                       <div className="relative z-10">
                         <div className="flex items-center gap-2 mb-4">
                             <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: accentColor }}></span>
-                            <span className="font-mono text-xs text-muted uppercase tracking-[0.2em]">高分辨率_视图</span>
+                            <span className="font-mono text-xs text-muted uppercase tracking-[0.2em]">3D_模型_视图</span>
+                            <Box size={12} style={{ color: accentColor }} />
                         </div>
 
                         <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tighter mb-2 leading-none">
@@ -195,14 +203,28 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
 
                       <button 
                         onClick={() => handleExpand(false)}
-                        className="mt-8 w-full py-3 bg-foreground text-background font-bold uppercase tracking-wider text-xs hover:bg-[--accent-color] transition-colors"
+                        className="mt-8 w-full py-3 bg-foreground text-background font-bold uppercase tracking-wider text-xs shadow-lg hover:bg-[--accent-color] hover:shadow-xl hover:scale-[1.01] active:scale-[0.97] active:brightness-90 transition-all duration-300"
                         style={{ '--accent-color': accentColor } as React.CSSProperties}
                       >
                           关闭视图
                       </button>
                  </div>
             </div>
-        </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Fullscreen 3D Model Viewer (Portal to escape parent stacking context) */}
+      {isFullscreenViewer && createPortal(
+          <FullscreenModelViewer
+              title={hotspot.title}
+              description={hotspot.description}
+              accentColor={accentColor}
+              modelUrl={hotspot.modelUrl}
+              onClose={() => setIsFullscreenViewer(false)}
+              isMobile={isMobile}
+          />,
+          document.body
       )}
     </>
   );
