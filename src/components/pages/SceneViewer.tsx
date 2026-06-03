@@ -3,6 +3,30 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Scene, Hotspot } from '../../types';
 import { ArrowLeft, ChevronRight, ChevronLeft, Scan, List, X } from 'lucide-react';
 import DetailCard from '../ui/DetailCard';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { useDeviceState } from '../../hooks/useDeviceState';
+
+gsap.registerPlugin(useGSAP);
+
+const SIDEBAR_ANIM = {
+  widthCollapsed: 60,
+  widthExpanded: 320,
+  enter: { duration: 0.55, ease: 'back.out(1.2)' },
+  exit: { duration: 0.3, ease: 'power3.in' },
+  contentEnter: { duration: 0.3, delay: 0.18, ease: 'power2.out' },
+  contentExit: { duration: 0.2, ease: 'power3.in' },
+  collapsedFade: 0.22,
+  listStaggerEnter: 0.045,
+  listStaggerExit: 0.018,
+  listDuration: 0.32,
+  listEnterX: 0,
+  listExitX: 6,
+  contentEnterX: 0,
+  contentExitX: 12,
+  mobileEnter: { duration: 0.55, ease: 'back.out(1.2)' },
+  mobileExit: { duration: 0.32, ease: 'power3.in' },
+};
 
 interface SceneViewerProps {
   scene: Scene;
@@ -14,7 +38,18 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const device = useDeviceState();
+  const isMobile = device !== 'desktop';
+  const isMobileLandscape = device === 'mobile-landscape';
+  const isMobilePortrait = device === 'mobile-portrait';
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  const asideRef = useRef<HTMLElement | null>(null);
+  const collapsedBarRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const listItemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const desktopTlRef = useRef<gsap.core.Timeline | null>(null);
+  const mobileTlRef = useRef<gsap.core.Timeline | null>(null);
 
   const handleHotspotSelect = (h: Hotspot | null) => {
       setActiveHotspot(h);
@@ -24,19 +59,250 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
   };
 
   useEffect(() => {
-    const checkMobile = () => {
-        const mobile = window.innerWidth < 768;
-        setIsMobile(mobile);
-        if (mobile) setIsMenuOpen(false);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setPrefersReducedMotion(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
   }, []);
 
-  const sidebarWidth = isMobile 
-    ? (isMenuOpen ? '100%' : '0px') 
-    : (isMenuOpen ? '320px' : '60px');
+  useGSAP(() => {
+    if (prefersReducedMotion) {
+      if (asideRef.current) {
+        gsap.set(asideRef.current, {
+          width: SIDEBAR_ANIM.widthCollapsed,
+          xPercent: 0,
+        });
+      }
+      if (collapsedBarRef.current) gsap.set(collapsedBarRef.current, { opacity: 1 });
+      if (contentRef.current) gsap.set(contentRef.current, { opacity: 0 });
+      return;
+    }
+
+    const items = listItemRefs.current.filter(Boolean) as HTMLElement[];
+
+    desktopTlRef.current = null;
+    mobileTlRef.current = null;
+
+    if (isMobile) {
+      if (asideRef.current) {
+        gsap.set(asideRef.current, { width: isMobileLandscape ? '62%' : '100%', xPercent: 100 });
+      }
+      if (collapsedBarRef.current) {
+        gsap.set(collapsedBarRef.current, { opacity: 0 });
+      }
+      if (contentRef.current) {
+        gsap.set(contentRef.current, { opacity: 0, x: SIDEBAR_ANIM.contentExitX });
+      }
+      if (items.length) {
+        gsap.set(items, { opacity: 0, x: SIDEBAR_ANIM.listExitX });
+      }
+
+      const mobileTl = gsap.timeline({ paused: true });
+      mobileTl
+        .to(
+          asideRef.current,
+          {
+            xPercent: 0,
+            duration: SIDEBAR_ANIM.mobileEnter.duration,
+            ease: SIDEBAR_ANIM.mobileEnter.ease,
+          },
+          0
+        )
+        .to(
+          collapsedBarRef.current,
+          { opacity: 0, duration: SIDEBAR_ANIM.collapsedFade, ease: 'power2.out' },
+          0
+        )
+        .to(
+          contentRef.current,
+          {
+            opacity: 1,
+            x: SIDEBAR_ANIM.contentEnterX,
+            duration: SIDEBAR_ANIM.contentEnter.duration,
+            ease: SIDEBAR_ANIM.contentEnter.ease,
+          },
+          SIDEBAR_ANIM.contentEnter.delay
+        )
+        .to(
+          items,
+          {
+            opacity: 1,
+            x: SIDEBAR_ANIM.listEnterX,
+            duration: SIDEBAR_ANIM.listDuration,
+            stagger: SIDEBAR_ANIM.listStaggerEnter,
+            ease: 'power2.out',
+          },
+          SIDEBAR_ANIM.contentEnter.delay + 0.05
+        )
+        .addPause();
+
+      mobileTl
+        .to(
+          items,
+          {
+            opacity: 0,
+            x: SIDEBAR_ANIM.listExitX,
+            duration: SIDEBAR_ANIM.listDuration * 0.55,
+            stagger: SIDEBAR_ANIM.listStaggerExit,
+            ease: SIDEBAR_ANIM.exit.ease,
+          },
+          '>-0.05'
+        )
+        .to(
+          contentRef.current,
+          {
+            opacity: 0,
+            x: SIDEBAR_ANIM.contentExitX,
+            duration: SIDEBAR_ANIM.contentExit.duration,
+            ease: SIDEBAR_ANIM.contentExit.ease,
+          },
+          '<0.05'
+        )
+        .to(
+          collapsedBarRef.current,
+          { opacity: 1, duration: 0.01, ease: 'none' },
+          '<'
+        )
+        .to(
+          asideRef.current,
+          {
+            xPercent: 100,
+            duration: SIDEBAR_ANIM.mobileExit.duration,
+            ease: SIDEBAR_ANIM.mobileExit.ease,
+          },
+          '<0.02'
+        );
+
+      mobileTlRef.current = mobileTl;
+      return;
+    }
+
+    if (asideRef.current) {
+      gsap.set(asideRef.current, { width: SIDEBAR_ANIM.widthCollapsed, xPercent: 0 });
+    }
+    if (collapsedBarRef.current) {
+      gsap.set(collapsedBarRef.current, { opacity: 1 });
+    }
+    if (contentRef.current) {
+      gsap.set(contentRef.current, { opacity: 0, x: SIDEBAR_ANIM.contentExitX });
+    }
+    if (items.length) {
+      gsap.set(items, { opacity: 0, x: SIDEBAR_ANIM.listExitX });
+    }
+
+    const tl = gsap.timeline({ paused: true });
+    tl
+      .to(
+        asideRef.current,
+        {
+          width: SIDEBAR_ANIM.widthExpanded,
+          duration: SIDEBAR_ANIM.enter.duration,
+          ease: SIDEBAR_ANIM.enter.ease,
+        },
+        0
+      )
+      .to(
+        collapsedBarRef.current,
+        { opacity: 0, duration: SIDEBAR_ANIM.collapsedFade, ease: 'power2.out' },
+        0
+      )
+      .to(
+        contentRef.current,
+        {
+          opacity: 1,
+          x: SIDEBAR_ANIM.contentEnterX,
+          duration: SIDEBAR_ANIM.contentEnter.duration,
+          ease: SIDEBAR_ANIM.contentEnter.ease,
+        },
+        SIDEBAR_ANIM.contentEnter.delay
+      )
+      .to(
+        items,
+        {
+          opacity: 1,
+          x: SIDEBAR_ANIM.listEnterX,
+          duration: SIDEBAR_ANIM.listDuration,
+          stagger: SIDEBAR_ANIM.listStaggerEnter,
+          ease: 'power2.out',
+        },
+        SIDEBAR_ANIM.contentEnter.delay + 0.05
+      )
+      .addPause();
+
+    tl
+      .to(
+        items,
+        {
+          opacity: 0,
+          x: SIDEBAR_ANIM.listExitX,
+          duration: SIDEBAR_ANIM.listDuration * 0.55,
+          stagger: SIDEBAR_ANIM.listStaggerExit,
+          ease: SIDEBAR_ANIM.exit.ease,
+        },
+        '>-0.05'
+      )
+      .to(
+        contentRef.current,
+        {
+          opacity: 0,
+          x: SIDEBAR_ANIM.contentExitX,
+          duration: SIDEBAR_ANIM.contentExit.duration,
+          ease: SIDEBAR_ANIM.contentExit.ease,
+        },
+        '<0.05'
+      )
+      .to(
+        asideRef.current,
+        {
+          width: SIDEBAR_ANIM.widthCollapsed,
+          duration: SIDEBAR_ANIM.exit.duration,
+          ease: SIDEBAR_ANIM.exit.ease,
+        },
+        '<0.04'
+      )
+      .to(
+        collapsedBarRef.current,
+        { opacity: 1, duration: SIDEBAR_ANIM.collapsedFade, ease: 'power2.in' },
+        `-=${SIDEBAR_ANIM.exit.duration * 0.6}`
+      );
+
+    desktopTlRef.current = tl;
+  }, [prefersReducedMotion, isMobile, scene.id]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      const aside = asideRef.current;
+      const collapsed = collapsedBarRef.current;
+      const content = contentRef.current;
+      const items = listItemRefs.current.filter(Boolean) as HTMLElement[];
+      if (!aside) return;
+      if (isMobile) {
+        gsap.set(aside, { xPercent: isMenuOpen ? 0 : 100, width: isMobileLandscape ? '60%' : '100%' });
+        gsap.set(collapsed, { opacity: 0 });
+        gsap.set(content, { opacity: isMenuOpen ? 1 : 0, x: isMenuOpen ? 0 : SIDEBAR_ANIM.contentExitX });
+        gsap.set(items, { opacity: isMenuOpen ? 1 : 0, x: isMenuOpen ? 0 : SIDEBAR_ANIM.listExitX });
+      } else {
+        gsap.set(aside, { width: isMenuOpen ? SIDEBAR_ANIM.widthExpanded : SIDEBAR_ANIM.widthCollapsed, xPercent: 0 });
+        gsap.set(collapsed, { opacity: isMenuOpen ? 0 : 1 });
+        gsap.set(content, { opacity: isMenuOpen ? 1 : 0, x: isMenuOpen ? 0 : SIDEBAR_ANIM.contentExitX });
+        gsap.set(items, { opacity: isMenuOpen ? 1 : 0, x: isMenuOpen ? 0 : SIDEBAR_ANIM.listExitX });
+      }
+      if (content) content.style.pointerEvents = isMenuOpen ? 'auto' : 'none';
+      if (collapsed) collapsed.style.pointerEvents = (isMobile || isMenuOpen) ? 'none' : 'auto';
+      return;
+    }
+    const tl = isMobile ? mobileTlRef.current : desktopTlRef.current;
+    if (contentRef.current) {
+      contentRef.current.style.pointerEvents = isMenuOpen ? 'auto' : 'none';
+    }
+    if (collapsedBarRef.current) {
+      collapsedBarRef.current.style.pointerEvents = (isMobile || isMenuOpen) ? 'none' : 'auto';
+    }
+    if (!tl) return;
+    if (isMenuOpen) tl.play();
+    else tl.reverse();
+  }, [isMenuOpen, isMobile, prefersReducedMotion]);
 
   return (
     // Changed bg-background to bg-transparent to allow GridOverlay to show through when image dims
@@ -78,15 +344,15 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
             className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 
                 ${activeHotspot 
                     ? 'scale-105 opacity-20 blur-[2px] grayscale' // Analysis Mode
-                    : 'scale-100 opacity-90 dark:opacity-80' // View Mode: Clear in Light, slightly dim in Dark
+                    : 'scale-100 opacity-80' // View Mode
                 }`}
         />
         
         {/* Decorative Grid Overlay (Internal to SceneViewer, on top of image) */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(120,120,120,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(120,120,120,0.1)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
         
-        {/* Vignette - Less opaque in Light Mode to avoid white fog */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(var(--background),0.3)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,rgba(var(--background),0.8)_100%)]" />
+        {/* Vignette */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(var(--background),0.8)_100%)]" />
 
         {/* --- INTERACTIVE HOTSPOT LAYERS --- */}
         <div className="absolute inset-0 z-30 pointer-events-none">
@@ -100,7 +366,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                             e.stopPropagation();
                             handleHotspotSelect(isActive ? null : hotspot);
                         }}
-                        className={`absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center group outline-none focus:outline-none transition-all duration-500`}
+                        className={`absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 ${isMobile ? 'w-14 h-14' : 'w-12 h-12'} flex items-center justify-center group outline-none focus:outline-none transition-all duration-300 active:scale-90`}
                         style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
                         aria-label={`Select ${hotspot.title}`}
                     >
@@ -112,7 +378,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                         )}
 
                         {!isActive && (
-                            <div className="absolute inset-0 rounded-full border border-current scale-50 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out text-white dark:text-white/50"></div>
+                            <div className="absolute inset-0 rounded-full border border-current scale-50 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out text-white/50"></div>
                         )}
 
                         <div 
@@ -164,7 +430,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
 
                 {/* 2. The Detail Card */}
                 <div 
-                    className={`absolute pointer-events-auto transition-all duration-500 z-50 ${isMobile ? 'inset-x-0 bottom-0' : 'max-w-sm'}`}
+                    className={`absolute pointer-events-auto transition-all duration-500 z-50 ${isMobileLandscape ? 'right-0 top-0 bottom-0 w-[58%] max-w-[560px]' : isMobile ? 'inset-x-0 bottom-0' : 'max-w-sm'}`}
                     style={isMobile ? {} : {
                         top: `clamp(15%, ${activeHotspot.y}%, 50%)`, 
                         left: activeHotspot.x > 50 ? `auto` : `clamp(20px, ${activeHotspot.x + 8}%, 50%)`,
@@ -177,6 +443,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                         sceneTitle={scene.title}
                         accentColor={scene.color}
                         isMobile={isMobile}
+                        isLandscape={isMobileLandscape}
                         onExpand={(expanded) => {
                             if (expanded) setIsMenuOpen(false);
                         }}
@@ -187,17 +454,15 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
 
         {/* SIDEBAR MENU */}
         <aside 
+            ref={asideRef}
             onMouseEnter={() => !isMobile && setIsMenuOpen(true)}
             onMouseLeave={() => !isMobile && setIsMenuOpen(false)}
-            className={`absolute top-0 right-0 h-full z-50 bg-background/90 md:bg-background/80 backdrop-blur-xl border-l border-border/10 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col shadow-2xl`}
-            style={{ 
-                width: sidebarWidth,
-                right: 0,
-            }}
+            className="absolute top-0 right-0 h-full z-50 bg-background/90 md:bg-background/80 backdrop-blur-xl border-l border-border/10 flex flex-col shadow-2xl overflow-hidden"
         >
             {!isMobile && (
                  <div 
-                    className={`absolute inset-0 w-[60px] border-l border-border/10 bg-background/90 flex flex-col items-center pt-24 gap-4 transition-opacity duration-300 ${!isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                    ref={collapsedBarRef}
+                    className="absolute inset-0 w-[60px] border-l border-border/10 bg-background/90 flex flex-col items-center pt-24 gap-4"
                  >
                      <button 
                         onClick={() => setIsMenuOpen(true)} 
@@ -230,7 +495,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                  </div>
             )}
 
-            <div className={`flex flex-col h-full w-full overflow-hidden transition-opacity duration-300 ${isMenuOpen ? 'opacity-100 delay-100' : 'opacity-0 pointer-events-none'}`}>
+            <div ref={contentRef} className="flex flex-col h-full w-full overflow-hidden">
                  
                 <div className="flex-none p-6 border-b border-border/10 mt-12 md:mt-0 flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -266,11 +531,12 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
                             return (
                                 <button
                                     key={hotspot.id}
+                                    ref={(el) => { listItemRefs.current[idx] = el; }}
                                     onClick={() => {
                                         handleHotspotSelect(isActive ? null : hotspot);
                                         if (isMobile) setIsMenuOpen(false);
                                     }}
-                                    className={`group relative flex items-center gap-4 p-3 w-full text-left border border-transparent transition-all duration-300 overflow-hidden ${isActive ? 'bg-surface/5 border-border/20' : 'hover:bg-surface/5 hover:border-border/10'}`}
+                                    className={`group relative flex items-center gap-4 w-full text-left border border-transparent transition-all duration-300 overflow-hidden active:scale-[0.985] ${isMobileLandscape ? 'p-2.5' : 'p-3'} ${isActive ? 'bg-surface/5 border-border/20' : 'hover:bg-surface/5 hover:border-border/10'}`}
                                 >
                                     <div className={`absolute left-0 top-0 bottom-0 w-1 transition-colors duration-300 ${isActive ? 'bg-[--accent-color]' : 'bg-transparent group-hover:bg-surface/20'}`} style={{ '--accent-color': scene.color } as React.CSSProperties}></div>
                                     
@@ -308,7 +574,7 @@ const SceneViewer: React.FC<SceneViewerProps> = ({ scene, onBack, onHotspotSelec
         {isMobile && !isMenuOpen && !activeHotspot && (
              <button
                 onClick={() => setIsMenuOpen(true)}
-                className="absolute right-4 bottom-20 z-30 w-12 h-12 bg-background/80 backdrop-blur-md border border-border/20 rounded-full flex items-center justify-center text-foreground shadow-lg animate-in fade-in zoom-in"
+                className={`absolute right-4 z-30 w-12 h-12 bg-background/80 backdrop-blur-md border border-border/20 rounded-full flex items-center justify-center text-foreground shadow-lg animate-in fade-in zoom-in ${isMobileLandscape ? 'bottom-4' : 'bottom-20'}`}
             >
                 <List size={20} />
             </button>

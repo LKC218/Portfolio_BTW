@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Volume2, VolumeX, Music, ChevronDown } from 'lucide-react';
 import { BGM_CONFIG } from '../../constants';
+import { useDeviceState } from '../../hooks/useDeviceState';
 
 const AudioPlayer: React.FC = () => {
+  const device = useDeviceState();
+  const isMobile = device !== 'desktop';
+  const isMobileLandscape = device === 'mobile-landscape';
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -272,7 +276,7 @@ const AudioPlayer: React.FC = () => {
     >
       {/* Expanded Player */}
       {isExpanded && (
-        <div className="mb-2 w-64 bg-surface/90 backdrop-blur-lg border border-border/20 rounded-lg shadow-xl overflow-hidden transition-all duration-300 ease-out animate-fadeIn">
+        <div className={`mb-2 bg-surface/90 backdrop-blur-lg border border-border/20 rounded-lg shadow-xl overflow-hidden transition-all duration-300 ease-out animate-fadeIn ${isMobile ? 'w-[min(16rem,calc(100vw-1.5rem))]' : 'w-64'}`}>
           {/* Progress Bar */}
           <div 
             ref={progressRef}
@@ -354,7 +358,7 @@ const AudioPlayer: React.FC = () => {
       {/* Minimized Button */}
       <button
         onClick={toggleExpanded}
-        className={`group flex items-center gap-2 p-2 backdrop-blur-md border transition-all duration-300 rounded-sm shadow-lg ${
+        className={`group flex items-center gap-2 p-2 backdrop-blur-md border transition-all duration-300 rounded-sm shadow-lg active:scale-95 ${
           hasError 
             ? 'bg-red-500/20 border-red-500 text-red-400' 
             : isPlaying 

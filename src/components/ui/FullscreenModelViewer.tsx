@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Maximize } from 'lucide-react';
 import ModelViewer from './ModelViewer';
+import { useDeviceState } from '../../hooks/useDeviceState';
 
 interface FullscreenModelViewerProps {
   title: string;
@@ -19,15 +20,10 @@ const FullscreenModelViewer: React.FC<FullscreenModelViewerProps> = ({
   onClose,
   isMobile = false,
 }) => {
+  const device = useDeviceState();
+  const isLandscape = device === 'mobile-landscape';
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-0 md:p-8 animate-in fade-in duration-300">
-      <style>{`
-        @keyframes fs-reveal-swipe {
-          0% { transform: scaleX(1); }
-          100% { transform: scaleX(0); }
-        }
-      `}</style>
-
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-background/95 backdrop-blur-md"
@@ -62,7 +58,7 @@ const FullscreenModelViewer: React.FC<FullscreenModelViewerProps> = ({
         </button>
 
         {/* 3D Viewport (Full Area) */}
-        <div className="flex-1 relative bg-black/80 min-h-[50vh] md:min-h-0">
+        <div className={`flex-1 relative bg-black/80 ${isLandscape ? 'min-h-0' : 'min-h-[40vh] sm:min-h-[50vh] md:min-h-0'}`}>
           <ModelViewer accentColor={accentColor} modelUrl={modelUrl} showHud={true} hudPadding="48px" />
 
           {/* Top-Left Badge */}
@@ -75,18 +71,20 @@ const FullscreenModelViewer: React.FC<FullscreenModelViewerProps> = ({
         {/* Info Panel */}
         <div
           className={`${
-            isMobile
+            isLandscape
+              ? 'w-[38%] max-h-none overflow-y-auto'
+              : isMobile
               ? 'w-full max-h-[55vh] overflow-y-auto'
               : 'w-[340px]'
           } flex-none bg-surface border-l border-border/10 flex flex-col relative overflow-hidden shrink-0 animate-in slide-in-from-right duration-700 fade-in fill-mode-forwards`}
           style={{ animationDelay: '0.2s' }}
         >
-          {isMobile && <div className="sticky top-0 flex-none pt-3 pb-1 flex justify-center bg-surface z-10">
+          {isMobile && !isLandscape && <div className="sticky top-0 flex-none pt-3 pb-1 flex justify-center bg-surface z-10">
             <div className="w-10 h-1 bg-border/20 rounded-full" />
           </div>}
 
-          <div className="flex-1 flex flex-col justify-between p-8 md:p-10 pt-6 md:pt-10">
-            <div className="relative z-10 space-y-8">
+          <div className={`flex-1 flex flex-col justify-between ${isLandscape ? 'p-5' : 'p-6 sm:p-8 md:p-10 pt-4 sm:pt-6 md:pt-10'}`}>
+            <div className={`relative z-10 ${isLandscape ? 'space-y-4' : 'space-y-6 sm:space-y-8'}`}>
               {/* Header Tag */}
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: accentColor }} />
@@ -95,10 +93,10 @@ const FullscreenModelViewer: React.FC<FullscreenModelViewerProps> = ({
 
               {/* Title */}
               <div>
-                <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tighter leading-none">
+                <h2 className={`${isLandscape ? 'text-lg' : 'text-xl sm:text-2xl md:text-3xl'} font-black text-foreground uppercase tracking-tighter leading-none`}>
                   {title}
                 </h2>
-                <div className="h-px w-20 bg-gradient-to-r from-foreground/50 to-transparent mt-4" />
+                <div className={`h-px w-20 bg-gradient-to-r from-foreground/50 to-transparent ${isLandscape ? 'mt-2' : 'mt-4'}`} />
               </div>
 
               {/* Description */}
@@ -115,16 +113,16 @@ const FullscreenModelViewer: React.FC<FullscreenModelViewerProps> = ({
               </div>
 
               {/* Controls Guide */}
-              <div className="p-4 border border-border/10 bg-background/20 space-y-3">
+              <div className={`p-3 sm:p-4 border border-border/10 bg-background/20 ${isLandscape ? 'space-y-1' : 'space-y-2 sm:space-y-3'}`}>
                 <div className="font-mono text-[9px] text-muted uppercase tracking-widest">操作指南</div>
-                <div className="space-y-2 text-[11px] text-foreground/50 font-mono">
+                <div className={`space-y-1.5 sm:space-y-2 text-[11px] text-foreground/50 font-mono`}>
                   <div className="flex items-center gap-3">
                     <span className="w-1 h-1 rounded-full flex-none" style={{ backgroundColor: accentColor, opacity: 0.4 }} />
                     <span>左键拖拽 → 旋转模型</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="w-1 h-1 rounded-full flex-none" style={{ backgroundColor: accentColor, opacity: 0.4 }} />
-                    <span>滚轮 → 缩放视图</span>
+                    <span>{isMobile ? '双指捏合 → 缩放视图' : '滚轮 → 缩放视图'}</span>
                   </div>
                 </div>
               </div>
@@ -133,7 +131,7 @@ const FullscreenModelViewer: React.FC<FullscreenModelViewerProps> = ({
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="mt-10 w-full py-3.5 bg-foreground text-background font-bold uppercase tracking-wider text-xs shadow-lg hover:bg-[--accent-color] hover:text-background hover:shadow-xl hover:scale-[1.01] active:scale-[0.97] active:brightness-90 transition-all duration-300"
+              className={`${isLandscape ? 'mt-4' : 'mt-6 sm:mt-10'} w-full py-3 sm:py-3.5 bg-foreground text-background font-bold uppercase tracking-wider text-xs shadow-lg hover:bg-[--accent-color] hover:text-background hover:shadow-xl hover:scale-[1.01] active:scale-[0.97] active:brightness-90 transition-all duration-300`}
               style={{ '--accent-color': accentColor } as React.CSSProperties}
             >
               关闭查看器

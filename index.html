@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,7 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        darkMode: 'class',
         theme: {
           extend: {
             colors: {
@@ -24,20 +23,11 @@
     </script>
     <style>
       :root {
-        /* Light Mode: "Warm Clarity" Aesthetic (温润清晰风格) */
-        --background: 245 243 240; /* #F5F3F0 - Warm Off-White (暖米白) */
-        --surface: 255 253 250;    /* #FFFDFA - Soft Cream White (柔奶油白) */
-        --foreground: 28 25 23;    /* #1C1917 - Stone-900 (暖深棕黑) */
-        --muted: 120 113 108;      /* #78716C - Stone-500 (暖灰) */
-        --border: 214 211 209;     /* #D6D3D1 - Stone-300 (暖灰边框) */
-      }
-      .dark {
-        /* Dark Mode: "Deep Space" Aesthetic */
-        --background: 5 5 5;       /* #050505 */
-        --surface: 24 24 27;       /* Zinc-900 */
-        --foreground: 255 255 255; /* White */
-        --muted: 156 163 175;      /* Gray-400 */
-        --border: 255 255 255;     /* White (used with opacity) */
+        --background: 5 5 5;
+        --surface: 24 24 27;
+        --foreground: 255 255 255;
+        --muted: 156 163 175;
+        --border: 255 255 255;
       }
       
       body {
@@ -45,7 +35,6 @@
         color: rgb(var(--foreground));
         font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
         overflow-x: hidden;
-        transition: background-color 0.5s ease, color 0.5s ease;
       }
       .font-mono {
         font-family: 'JetBrains Mono', monospace;
@@ -79,6 +68,8 @@
       .animate-fadeIn {
         animation: fadeIn 0.3s ease-out;
       }
+
+
       
       /* Custom range slider styling */
       input[type="range"] {
@@ -116,14 +107,79 @@
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
       }
       
+      /* Transition: slide-in / slide-out (App.tsx) */
+      @keyframes slide-in {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(0%); }
+      }
+      @keyframes slide-out {
+        0% { transform: translateX(0%); }
+        100% { transform: translateX(-100%); }
+      }
+
+      /* GridOverlay: scanner / orb / flicker / contour */
+      @keyframes cyber-scan {
+        0% { transform: translateY(-100%); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(100vh); opacity: 0; }
+      }
+      @keyframes orb-float-fast {
+        0% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.2); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0, 0) scale(1); }
+      }
+      @keyframes glitch-flicker {
+        0% { opacity: 0.3; }
+        5% { opacity: 1; }
+        10% { opacity: 0.3; }
+        15% { opacity: 1; }
+        20% { opacity: 0.3; }
+        100% { opacity: 0.3; }
+      }
+      @keyframes contour-drift {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 10% 5%; }
+      }
+
+      /* DetailCard: wipe reveal */
+      @keyframes reveal-swipe {
+        0% { transform: scaleX(1); }
+        100% { transform: scaleX(0); }
+      }
+      @keyframes image-scale-reveal {
+        0% { transform: scale(1.1); filter: brightness(0.5); }
+        100% { transform: scale(1); filter: brightness(1); }
+      }
+
+      /* FullscreenModelViewer: wipe reveal */
+      @keyframes fs-reveal-swipe {
+        0% { transform: scaleX(1); }
+        100% { transform: scaleX(0); }
+      }
+
+      /* Shimmer bar (App.tsx) */
+      @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(200%); }
+      }
+
+      /* Custom cursor active state */
+      html.custom-cursor-active,
+      html.custom-cursor-active * {
+        cursor: none !important;
+      }
+
       /* Respect user motion preferences */
       @media (prefers-reduced-motion: reduce) {
         .animate-fadeIn,
         .animate-ping,
-        .animate-pulse {
+        .animate-pulse,
+        [class*="animate-"] {
           animation: none !important;
         }
-        
+
         .transition-all {
           transition: none !important;
         }

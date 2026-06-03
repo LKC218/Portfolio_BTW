@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { COLLECTIONS, getScenesForCollection } from './constants';
 import { Scene, Collection, AppState, Hotspot } from './types';
 import GridOverlay from './components/layout/GridOverlay';
@@ -7,30 +7,13 @@ import Gallery from './components/pages/Gallery';
 import SceneViewer from './components/pages/SceneViewer';
 import AudioPlayer from './components/layout/AudioPlayer';
 import HomeSelection from './components/pages/HomeSelection';
-import ThemeToggle from './components/layout/ThemeToggle';
+import CustomCursor from './components/layout/CustomCursor';
 
 const App: React.FC = () => {
   // Start at HOME directly
   const [appState, setAppState] = useState<AppState>(AppState.HOME);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [selectedScene, setSelectedScene] = useState<Scene | null>(null);
-  
-  // Theme State
-  const [isDark, setIsDark] = useState(true);
-
-  // Toggle Theme
-  const toggleTheme = () => {
-      setIsDark(prev => !prev);
-  };
-
-  // Apply Theme Class
-  useEffect(() => {
-      if (isDark) {
-          document.documentElement.classList.add('dark');
-      } else {
-          document.documentElement.classList.remove('dark');
-      }
-  }, [isDark]);
   
   // Ambient Color State (Driven by Hover in Gallery/Home or Selection in Viewer)
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
@@ -72,41 +55,29 @@ const App: React.FC = () => {
     }, 700);
   };
 
-  const handleSelectCollection = (collection: Collection) => {
+  const handleSelectCollection = useCallback((collection: Collection) => {
     setSelectedCollection(collection);
     navigate(AppState.GALLERY, null, collection.color);
-  };
+  }, [navigate]);
 
-  const handleSelectScene = (scene: Scene) => {
-      // Use the specific scene transition color (if defined in DB) or fall back to scene main color
+  const handleSelectScene = useCallback((scene: Scene) => {
       const tColor = scene.transitionColor || scene.color;
       navigate(AppState.VIEWER, scene, tColor);
-  };
+  }, [navigate]);
 
-  const handleBackToGallery = () => {
-      // Use collection color for transition back to gallery
+  const handleBackToGallery = useCallback(() => {
       const color = selectedCollection ? selectedCollection.color : '#fff';
       navigate(AppState.GALLERY, null, color);
-  };
+  }, [navigate, selectedCollection]);
 
-  const handleBackToHome = () => {
+  const handleBackToHome = useCallback(() => {
       setSelectedCollection(null);
       navigate(AppState.HOME, null, '#fff');
-  };
+  }, [navigate]);
 
   return (
     <div className="relative min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background overflow-hidden transition-colors duration-500">
-      {/* Global Transition Styles */}
-      <style>{`
-        @keyframes slide-in {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(0%); }
-        }
-        @keyframes slide-out {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-100%); }
-        }
-      `}</style>
+
 
       {/* Full Screen Transition Overlay */}
       {transitionStatus !== 'idle' && (
@@ -178,8 +149,8 @@ const App: React.FC = () => {
       </main>
 
       {/* Persistent UI Controls */}
-      <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
       <AudioPlayer />
+      <CustomCursor />
 
       {/* Persistent global UI */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none">

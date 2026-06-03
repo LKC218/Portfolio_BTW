@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, Suspense, useCallback } from 'react';
+import React, { useRef, useState, useEffect, Suspense, useCallback, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Float, MeshDistortMaterial, useGLTF, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -60,17 +60,20 @@ function PlaceholderModel({ accentColor }: { accentColor: string }) {
 function LoadedModel({ url }: { url: string }) {
   const { scene } = useGLTF(url);
 
-  const box = new THREE.Box3().setFromObject(scene);
-  const center = box.getCenter(new THREE.Vector3());
-  const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
-  const scale = maxDim > 0 ? 3 / maxDim : 1;
+  const { position, scale } = useMemo(() => {
+    const box = new THREE.Box3().setFromObject(scene);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const s = maxDim > 0 ? 3 / maxDim : 1;
+    return {
+      position: [-center.x * s, -center.y * s, -center.z * s] as [number, number, number],
+      scale: s,
+    };
+  }, [scene]);
 
   return (
-    <group
-      position={[-center.x * scale, -center.y * scale, -center.z * scale]}
-      scale={scale}
-    >
+    <group position={position} scale={scale}>
       <primitive object={scene} />
     </group>
   );

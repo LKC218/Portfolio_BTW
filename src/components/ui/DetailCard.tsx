@@ -12,10 +12,11 @@ interface DetailCardProps {
   sceneTitle: string;
   accentColor: string;
   isMobile?: boolean;
+  isLandscape?: boolean;
   onExpand?: (expanded: boolean) => void;
 }
 
-const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, accentColor, isMobile = false, onExpand }) => {
+const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, accentColor, isMobile = false, isLandscape = false, onExpand }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFullscreenViewer, setIsFullscreenViewer] = useState(false);
 
@@ -29,34 +30,25 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
   // Dynamic classes based on Mobile vs Desktop
   // Mobile: Bottom Sheet style with rounded top corners
   // Desktop: Floating card style
-  const containerClasses = isMobile
-    ? "w-full bg-surface border-t border-border/20 rounded-t-xl shadow-[0_-5px_20px_rgba(0,0,0,0.9)] max-h-[75vh] overflow-y-auto animate-in slide-in-from-bottom duration-300"
+  const containerClasses = isLandscape
+    ? "w-full h-full bg-surface/90 border-l border-border/20 backdrop-blur-xl shadow-2xl overflow-y-auto scrollbar-hide animate-in slide-in-from-right duration-300"
+    : isMobile
+    ? "w-full bg-surface border-t border-border/20 rounded-t-xl shadow-[0_-5px_20px_rgba(0,0,0,0.9)] max-h-[72dvh] overflow-y-auto animate-in slide-in-from-bottom duration-300"
     : "w-80 bg-surface/90 border border-border/20 backdrop-blur-xl shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide animate-in zoom-in-95 duration-300";
 
   return (
     <>
-      {/* Custom Keyframes for the Wipe Effect */}
-      <style>{`
-        @keyframes reveal-swipe {
-          0% { transform: scaleX(1); }
-          100% { transform: scaleX(0); }
-        }
-        @keyframes image-scale-reveal {
-          0% { transform: scale(1.1); filter: brightness(0.5); }
-          100% { transform: scale(1); filter: brightness(1); }
-        }
-      `}</style>
-
       <div 
           className={`relative overflow-hidden group ${containerClasses}`}
           style={{ 
-              borderColor: isMobile ? undefined : accentColor,
-              borderTopColor: isMobile ? accentColor : undefined, // Accent color on top border for mobile
-              boxShadow: isMobile ? undefined : `0 0 30px ${accentColor}15` 
+              borderColor: (!isMobile && !isLandscape) ? accentColor : undefined,
+              borderTopColor: isMobile ? accentColor : undefined,
+              borderLeftColor: isLandscape ? accentColor : undefined,
+              boxShadow: (!isMobile && !isLandscape) ? `0 0 30px ${accentColor}15` : undefined
           }}
       >
         {/* Mobile Drag Handle Indicator */}
-        {isMobile && (
+        {isMobile && !isLandscape && (
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-border/20 rounded-full mt-2 z-20"></div>
         )}
 
@@ -134,7 +126,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
             </div>
 
             {/* Modal Content */}
-            <div className="relative z-10 flex flex-col md:flex-row w-full h-full md:max-w-6xl md:h-auto md:max-h-[90vh] bg-surface md:border border-border/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
+            <div className={`relative z-10 overflow-hidden ${isLandscape ? 'flex flex-row w-full h-full' : 'flex flex-col md:flex-row w-full h-full md:max-w-6xl md:h-auto md:max-h-[90vh] bg-surface md:border border-border/10 shadow-[0_0_100px_rgba(0,0,0,0.8)]'}`}>
                  
                  {/* === TRANSITION WIPES === */}
                  <div 
@@ -153,7 +145,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
                  {/* Close Button */}
                  <button 
                     onClick={() => handleExpand(false)}
-                    className="absolute top-5 right-5 z-20 p-2 bg-surface/50 hover:bg-[--accent-color] hover:text-background border border-border/10 text-foreground transition-all rounded-full opacity-0 animate-in fade-in fill-mode-forwards delay-500"
+                    className="absolute top-5 right-5 z-20 min-w-11 min-h-11 p-2 bg-surface/50 hover:bg-[--accent-color] hover:text-background border border-border/10 text-foreground transition-all rounded-full opacity-0 animate-in fade-in fill-mode-forwards delay-500 flex items-center justify-center"
                     style={{ '--accent-color': accentColor } as React.CSSProperties}
                  >
                     <X size={24} />
@@ -175,8 +167,8 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
                  </div>
 
                  {/* Info Panel */}
-                 <div className="w-full md:w-96 flex-none bg-surface border-l border-border/10 p-6 md:p-8 flex flex-col justify-center relative overflow-hidden shrink-0 animate-in slide-in-from-right duration-700 fade-in fill-mode-forwards" style={{ animationDelay: '0.2s' }}>
-                      {isMobile && <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-border/10 rounded-full" />}
+                 <div className={`${isLandscape ? 'w-[40%]' : 'w-full md:w-96'} flex-none bg-surface border-l border-border/10 p-4 md:p-8 flex flex-col justify-center relative overflow-hidden shrink-0 animate-in slide-in-from-right duration-700 fade-in fill-mode-forwards`} style={{ animationDelay: '0.2s' }}>
+                      {isMobile && !isLandscape && <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-border/10 rounded-full" />}
                       
                       <div className="relative z-10">
                         <div className="flex items-center gap-2 mb-4">
@@ -185,13 +177,13 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
                             <Box size={12} style={{ color: accentColor }} />
                         </div>
 
-                        <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tighter mb-2 leading-none">
+                        <h2 className={`${isLandscape ? 'text-lg' : 'text-2xl md:text-3xl'} font-black text-foreground uppercase tracking-tighter mb-2 leading-none`}>
                             {hotspot.title}
                         </h2>
                         
-                        <div className="h-px w-20 bg-gradient-to-r from-foreground/50 to-transparent mb-6"></div>
+                        <div className={`h-px w-20 bg-gradient-to-r from-foreground/50 to-transparent ${isLandscape ? 'mb-3' : 'mb-6'}`}></div>
 
-                        <div className="space-y-6">
+                        <div className={`${isLandscape ? 'space-y-3' : 'space-y-6'}`}>
                             <div>
                                 <h3 className="text-[10px] font-mono text-[--accent-color] uppercase mb-2 tracking-widest" style={{ color: accentColor }}>描述</h3>
                                 <p className="text-sm text-muted leading-relaxed border-l border-border/20 pl-4">
@@ -203,7 +195,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
 
                       <button 
                         onClick={() => handleExpand(false)}
-                        className="mt-8 w-full py-3 bg-foreground text-background font-bold uppercase tracking-wider text-xs shadow-lg hover:bg-[--accent-color] hover:shadow-xl hover:scale-[1.01] active:scale-[0.97] active:brightness-90 transition-all duration-300"
+                        className={`${isLandscape ? 'mt-4' : 'mt-8'} w-full py-3 bg-foreground text-background font-bold uppercase tracking-wider text-xs shadow-lg hover:bg-[--accent-color] hover:shadow-xl hover:scale-[1.01] active:scale-[0.97] active:brightness-90 transition-all duration-300`}
                         style={{ '--accent-color': accentColor } as React.CSSProperties}
                       >
                           关闭视图

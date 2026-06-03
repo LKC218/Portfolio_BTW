@@ -25,13 +25,12 @@ export const BGM_CONFIG = {
 // ==================================================================================
 export const COLLECTIONS: Collection[] = [
   // --- PAGE 1 ---
-  { id: 'C-01', title: 'BTW_通道2', subtitle: 'BTW_Passage1', description: '2号撤离通道。', color: ACCENT_COLORS.NEON_RED,
-    // image: '/assets/collections/cover_01.jpg',
-    image: '/assets/占位符竖板.png' },
-  { id: 'C-02', title: 'BTW_通道1', subtitle: 'RESTRICTED ZONE', description: '1号撤离通道。', color: ACCENT_COLORS.ACID_GREEN,
+  { id: 'C-01', title: 'BTW_通道1', subtitle: 'BTW_PASSAGE1', description: '1号撤离通道。', color: '#CCFF00',
+    image: '/assets/BTW/BTW_Scenes_1_卡片页.jpg' },
+  { id: 'C-02', title: 'BTW_通道2', subtitle: 'BTW_PASSAGE2', description: '2号撤离通道。', color: '#FCEE0A',
     // image: '/assets/collections/cover_02.jpg',
     image: '/assets/占位符竖板2.png' },
-  { id: 'C-03', title: 'BTW_垂直通道', subtitle: 'THE WASTELANDS', description: '垂直燃料管道。', color: ACCENT_COLORS.WARNING_YELLOW,
+  { id: 'C-03', title: 'BTW_垂直通道', subtitle: 'THE WASTELANDS', description: '垂直燃料管道。', color: ACCENT_COLORS.ELECTRIC_BLUE,
     // image: '/assets/collections/cover_03.jpg',
     image: '/assets/占位符竖板3.png' },
   
@@ -117,41 +116,39 @@ interface RawSceneConfig {
 
 export const SCENES_DB: Record<string, RawSceneConfig[]> = {
   // --------------------------------------------------------------------------------
-  // [C-01] 都市核心 (URBAN CORE)
+  // [C-01] 通道1
   // --------------------------------------------------------------------------------
   'C-01': [
     { 
-      id: '01', title: '通道2镜头1', 
+      id: '01', title: '通道1镜头1', 
       // borderColor: '#FFFFFF', // [示例] 强制白色边框
       // transitionColor: '#000000', // [示例] 黑色转场
-      // local: '/assets/c01/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
-      // local: ['/assets/c01/s01_h1.jpg', '/assets/c01/s01_h2.jpg', '/assets/c01/s01_h3.jpg'],
+      mainImage: '/assets/BTW/BTW_Scenes_1_1.jpg',
       detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+    },
+    { id: '02', title: '通道1镜头2', mainImage: '/assets/BTW/BTW_Scenes_1_2.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '03', title: '通道1镜头3', mainImage: '/assets/BTW/BTW_Scenes_1_3.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '04', title: '通道1镜头4', mainImage: '/assets/BTW/BTW_Scenes_1_4.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '05', title: '通道1镜头5', mainImage: '/assets/BTW/BTW_Scenes_1_5.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '06', title: '通道1镜头6', mainImage: '/assets/BTW/BTW_Scenes_1_6.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+  ],
+
+  // --------------------------------------------------------------------------------
+  // [C-02] 通道2
+  // --------------------------------------------------------------------------------
+  'C-02': [
+    { 
+      id: '01', title: '通道2镜头1', 
+      // local: '/assets/c02/s01_main.jpg',
+      mainImage: '/assets/占位符竖板.png', 
+      // local: ['/assets/c02/s01_h1.jpg', '/assets/c02/s01_h2.jpg', '/assets/c02/s01_h3.jpg'],
+      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] 
     },
     { id: '02', title: '通道2镜头2', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
     { id: '03', title: '通道2镜头3', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
     { id: '04', title: '通道2镜头4', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
     { id: '05', title: '通道2镜头5', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
     { id: '06', title: '通道2镜头6', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-  ],
-
-  // --------------------------------------------------------------------------------
-  // [C-02] 工业禁区 (RESTRICTED ZONE)
-  // --------------------------------------------------------------------------------
-  'C-02': [
-    { 
-      id: '01', title: '通道1镜头1', 
-      // local: '/assets/c02/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png', 
-      // local: ['/assets/c02/s01_h1.jpg', '/assets/c02/s01_h2.jpg', '/assets/c02/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] 
-    },
-    { id: '02', title: '通道1镜头2', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '通道1镜头3', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '通道1镜头4', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '通道1镜头5', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '通道1镜头6', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
   ],
 
   // --------------------------------------------------------------------------------

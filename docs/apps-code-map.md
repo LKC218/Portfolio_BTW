@@ -4,18 +4,24 @@
 
 ### 1. 项目开发经验
 - **路径**: `docs/项目开发经验/项目开发经验.md`
-- **内容**: 项目架构设计、组件开发经验、样式系统、AI集成、性能优化等
-- **最后更新**: 2026-05-28
+- **内容**: 项目架构设计、组件开发经验、样式系统、AI集成、性能优化、GSAP 动画经验沉淀等
+- **最后更新**: 2026-06-02（v1.4 移除主题色切换功能）
 
 ### 2. 功能更新记录
-- **路径**: `docs/功能更新记录-260528.md`
-- **内容**: 2026年5月28日的功能更新详细记录
+- **路径**: `docs/功能更新记录-260602.md`
+- **内容**: 2026-05-28 / 2026-06-01 / 2026-06-02 的功能更新详细记录
 - **主要变更**: 
   - 音频播放器重构
   - 首页Hero区域
   - 场景查看器优化
   - 数据结构更新
   - 样式系统增强
+  - 3D模型查看器与全屏弹窗
+  - 端口优化与环境变量
+  - 首页顶栏 GSAP 动效重构
+  - 斜切标语 3D 交互
+  - SceneViewer 侧边栏可中断 enter/exit
+  - 3D 模型查看器统一化
 
 ### 3. 3D模型查看器功能实现
 - **路径**: `docs/3D模型查看器-功能实现-260601.md`
@@ -32,6 +38,11 @@
 - **内容**: 前端UI结构化导航，全局层级架构、页面级/组件级UI元素拆解、视觉特征反查索引
 - **适用场景**: 快速定位界面元素对应的组件名与文件路径，支持人工查阅和AI上下文注入
 
+### 5. 已实现的方案
+- **路径**: `docs/已实现的方案/字体乱码解码与点阵字符扰动方案-260603.md`
+- **内容**: 首页字体乱码解码、CTA 标语 scramble、白点点阵 ASCII 字符扰动的实现参数、复用步骤和注意事项
+- **适用场景**: 后续在其他页面复用终端风格字体动效、HUD 小字 hover 解码、低透明点阵字符扰动
+
 ---
 
 ## 项目结构概览
@@ -40,12 +51,16 @@
 Portfolio_BTW/
 ├── docs/                          # 文档目录
 │   ├── apps-code-map.md          # 本文档 - 项目文档导航
-│   ├── 功能更新记录-260528.md     # 功能更新记录
+│   ├── UI框架Map.md             # UI框架结构化导航
+│   ├── 功能更新记录-260602.md     # 功能更新记录（2026-05-28/06-01/06-02 累计）
 │   ├── 3D模型查看器-功能实现-260601.md # 3D模型查看器功能实现
+│   ├── 已实现的方案/              # 已沉淀可复用技术方案
+│   │   └── 字体乱码解码与点阵字符扰动方案-260603.md
 │   └── 项目开发经验/              # 项目开发经验文档
 │       └── 项目开发经验.md
 ├── public/                        # 静态资源
 │   └── assets/                   # 资源文件
+│       ├── BTW/                  # BTW 系列资源（C-01 卡片封面与通道1场景图）
 │       ├── audio/                # 音频文件
 │       ├── scene_01/             # 场景图片
 │       └── *.png, *.jpg          # 占位符图片
@@ -53,16 +68,20 @@ Portfolio_BTW/
 │   ├── components/               # 组件
 │   │   ├── layout/              # 布局组件
 │   │   │   ├── AudioPlayer.tsx  # 音频播放器
-│   │   │   ├── GridOverlay.tsx  # 网格覆盖层
-│   │   │   └── ThemeToggle.tsx  # 主题切换
+│   │   │   ├── CustomCursor.tsx # 自定义光标（GSAP quickTo 跟随 + 交互态缩放）
+│   │   │   └── GridOverlay.tsx  # 网格覆盖层
 │   │   ├── pages/               # 页面组件
 │   │   │   ├── Gallery.tsx      # 画廊页面
 │   │   │   ├── HomeSelection.tsx # 首页选择
 │   │   │   └── SceneViewer.tsx  # 场景查看器
 │   │   └── ui/                  # UI组件
 │   │       ├── DetailCard.tsx   # 详情卡片（含3D/图片双模式）
+│   │       ├── FullscreenModelViewer.tsx # 全屏3D模型弹窗
 │   │       ├── ModelViewer.tsx  # 3D模型查看器
-│   │       └── FullscreenModelViewer.tsx # 全屏3D模型弹窗
+│   │       └── RollingClock.tsx # 滚动翻页时钟（GSAP 数字切换动画）
+│   ├── hooks/                   # 自定义 Hooks
+│   │   ├── useDeviceState.ts   # 设备状态检测（desktop/mobile-portrait/mobile-landscape）
+│   │   └── useMouseEffects.ts  # 鼠标视差效果 Hook（quickTo 缓存 + 归一化指针）
 │   ├── services/                # 服务
 │   │   └── geminiService.ts     # Gemini API服务
 │   ├── App.tsx                  # 主应用组件
@@ -113,11 +132,15 @@ Portfolio_BTW/
 ### 2. 首页选择 (`HomeSelection.tsx`)
 - **功能**: 作品集展示与选择
 - **特性**: Hero区域、视差滚动、实时时钟、命令行风格
+- **特性（移动端）**: 使用 `useDeviceState` 区分竖版/横版，压缩 Hero 高度、时钟字号、卡片高度和底部间距；触摸端卡片默认展示入口信息并提供 `active` 按压反馈，不依赖 hover；顶栏右侧显示全屏切换按钮，PC 端保留原状态文字区
+- **特性（Hero 时钟）**: 右下角 `RollingClock` 使用 `clamp()` 响应式字号，外层 `max-w-full` + `overflow-hidden` 防止窄桌面视口下超大字号溢出并压到斜切标语
+- **特性（顶栏）**: 玻璃态半透明 + 流动渐变（`bg-background/10` + `backdrop-blur-2xl` + `backdrop-saturate-150`；底层 `#CCFF00` 绿光晕 14s 横移 + 底部流光线 12s 横移，关键帧定义在 `index.html`）；标题/副标签/统计文字以 `[text-shadow:...]` 兜底可读性；脉冲点带 `drop-shadow-[...]` 绿色辉光
 - **配置**: `HERO_CONFIG` 常量
 
 ### 3. 场景查看器 (`SceneViewer.tsx`)
 - **功能**: 场景详情展示与热区交互
 - **特性**: 透明背景、热区选择、侧边栏、瞄准器
+- **特性（侧边栏动画）**: GSAP 单 Timeline + `addPause()` 实现可中断 enter/exit（参考 [Interruptible Single Timeline Enter/Exit](https://demos.gsap.com/demo/interruptible-single-timeline-enterexit/)），桌面端宽度 60px↔320px + 列表 stagger（`back.out(1.2)` 进入 / `power3.in` 退出），移动端 `xPercent` 抽屉，遵守 `prefers-reduced-motion`
 - **依赖**: `DetailCard` 组件
 
 ### 4. 详情卡片 (`DetailCard.tsx`)
@@ -133,9 +156,30 @@ Portfolio_BTW/
 ### 6. 全屏3D模型弹窗 (`FullscreenModelViewer.tsx`)
 - **功能**: 独立的全屏 3D 模型查看器
 - **特性**: 全屏覆盖、wipe 转场动画、操作指南面板、赛博朋克 UI 风格
+- **特性（移动端）**: 关闭按钮和角标位置适配小屏，操作指南在触屏设备显示“单指拖拽 / 双指捏合”文案
 - **依赖**: `ModelViewer`
 
-### 7. 常量配置 (`constants.ts`)
+### 7. 自定义光标 (`CustomCursor.tsx`)
+- **功能**: 全局自定义光标，GSAP `quickTo` 平滑跟随鼠标
+- **特性**: 交互态缩放（idle/hover/pressed 三态）、`prefers-reduced-motion` + `pointer: coarse` 检测自动禁用
+- **依赖**: `useMouseEffects` Hook
+
+### 8. 滚动翻页时钟 (`RollingClock.tsx`)
+- **功能**: 实时时钟显示，数字切换时带 GSAP 翻页动画
+- **特性**: 渐变文字 + `WebkitTextStroke` 描边、`useMemo` 优化 digits 数组
+- **位置**: HomeSelection Hero 区域右下角
+
+### 9. 设备状态检测 (`useDeviceState.ts`)
+- **功能**: 检测当前设备类型，区分 `desktop` / `mobile-portrait` / `mobile-landscape`
+- **判断逻辑**: `width < 768` 为移动端，`width < 1024 && height < 500` 为横版移动端
+- **事件**: 监听 `resize` + `orientationchange`
+
+### 10. 鼠标视差效果 (`useMouseEffects.ts`)
+- **功能**: 归一化指针坐标 + `gsap.quickTo` 视差缓存
+- **特性**: `prefers-reduced-motion` + `pointer: coarse` 检测自动禁用
+- **导出**: `useMouseEffects()` 返回 `{ isSupported, pointer, parallaxTo }`
+
+### 11. 常量配置 (`constants.ts`)
 - **内容**: 颜色系统、BGM配置、作品集数据、场景数据
 - **更新**: 2026-05-28 更新了作品集封面路径
 
@@ -147,7 +191,7 @@ Portfolio_BTW/
 - 使用有意义的中文文件名
 - 词组分隔使用连字符 `-`
 - 日期后置使用 `YYMMDD` 格式
-- 示例: `功能更新记录-260528.md`
+- 示例: `功能更新记录-260602.md`（最后更新日期后置）
 
 ### 更新要求
 1. 新增、修改或重构功能模块后，必须同步更新本文档
@@ -167,3 +211,14 @@ Portfolio_BTW/
 | 2026-06-01 | 3D模型查看器-功能实现-260601.md | 创建3D模型查看器功能实现文档 |
 | 2026-06-01 | apps-code-map.md | 新增3D模型查看器组件导航 |
 | 2026-06-01 | .env, 启动.bat, vite.config.ts | 端口优化，支持环境变量配置 |
+| 2026-06-01 | UI框架Map.md | 创建UI框架结构化导航文档 |
+| 2026-06-01 | HomeSelection.tsx, index.html, UI框架Map.md, apps-code-map.md | 首页顶栏升级为玻璃态 + 流动渐变（`#CCFF00` 流光线 + 底层绿光晕） |
+| 2026-06-01 | HomeSelection.tsx, apps-code-map.md | 首页顶栏暗色模式加深半透明（`dark:bg-background/10` + `dark:backdrop-blur-2xl`），按区域补强文字阴影与脉冲辉光 |
+| 2026-06-02 | SceneViewer.tsx, apps-code-map.md, 3D模型查看器-功能实现-260601.md, 项目开发经验.md | SceneViewer 侧边栏重构为 GSAP 单 Timeline + `addPause()` 可中断 enter/exit 动画（桌面 width 60↔320 + 列表 stagger，移动 xPercent 抽屉），遵守 `prefers-reduced-motion` |
+| 2026-06-02 | ThemeToggle.tsx（删除）, App.tsx, index.html, 5 个组件文件, UI框架Map.md, apps-code-map.md, 项目开发经验.md | 移除主题色切换功能，固定为暗色唯一主题；删除 ThemeToggle 组件及切换链路；清理全部 `dark:` Tailwind 类；CSS 变量从 `.dark` 提升为 `:root` |
+| 2026-06-02 | vite.config.ts | 构建优化：Three.js / GSAP 代码分割 `manualChunks` |
+| 2026-06-02 | index.html, App.tsx, GridOverlay.tsx, DetailCard.tsx, FullscreenModelViewer.tsx | 内联 `@keyframes` 统一迁移到 `index.html`；App.tsx 转场 + CustomCursor 样式一并迁移 |
+| 2026-06-02 | App.tsx | 事件处理器 `useCallback` 包装，减少子组件无效重渲染 |
+| 2026-06-02 | ModelViewer.tsx | LoadedModel 对象复用：`Box3`/`Vector3` 计算移入 `useMemo` |
+| 2026-06-02 | apps-code-map.md | 补充 CustomCursor、RollingClock、useDeviceState、useMouseEffects 条目 |
+| 2026-06-03 | 已实现的方案/字体乱码解码与点阵字符扰动方案-260603.md, apps-code-map.md | 新增首页字体乱码解码与点阵字符扰动复用方案文档 |
