@@ -1,20 +1,74 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Portfolio_BTW
 
-# Run and deploy your AI Studio app
+基于 Vite、React、Three.js 和 GSAP 构建的个人作品集网站。
 
-This contains everything you need to run your app locally.
+## 本地运行
 
-View your app in AI Studio: https://ai.studio/apps/drive/148eqo-d4uhbUshAZqmLT_9mrErqWw6Hz
+需要先安装 Node.js。
 
-## Run Locally
+```powershell
+npm install
+npm run dev
+```
 
-**Prerequisites:**  Node.js
+默认本地访问地址：
 
+```text
+http://localhost:3000/
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 构建
+
+```powershell
+npm run build
+```
+
+构建产物会生成到：
+
+```text
+dist/
+```
+
+## 本地预览构建产物
+
+```powershell
+npm run preview
+```
+
+## GitHub Pages 部署
+
+当前项目按 GitHub Pages 项目页配置，仓库地址：
+
+```text
+https://github.com/LKC218/Portfolio_BTW.git
+```
+
+公网访问地址预计为：
+
+```text
+https://lkc218.github.io/Portfolio_BTW/
+```
+
+部署方式：
+
+1. 推送代码到 `main` 分支。
+2. GitHub Actions 自动执行 `npm ci` 和 `npm run build`。
+3. 自动发布 `dist/` 到 GitHub Pages。
+
+GitHub 仓库需要在：
+
+```text
+Settings → Pages
+```
+
+将 Source 设置为：
+
+```text
+GitHub Actions
+```
+
+## 环境变量安全
+
+项目中预留了 Gemini API Key 读取逻辑。不要将真实 `.env`、`.env.local` 或 API Key 提交到仓库。
+
+当前 `.gitignore` 已忽略环境变量文件。
