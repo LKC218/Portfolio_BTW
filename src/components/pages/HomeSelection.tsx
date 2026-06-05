@@ -210,7 +210,7 @@ const HomeSelection: React.FC<HomeSelectionProps> = ({ collections, onSelect, on
                         {/* 第一组卡片下方：滚动缩放视频区域 */}
                         {groupIndex === 0 && (
                             <ScrollVideo
-                                 src="/assets/Video/font-distortion.mp4"
+                                 src={`${import.meta.env.BASE_URL}assets/Video/font-distortion.mp4`}
                                  className="w-full"
                                  title="扰动字体效果"
                                  subtitle="VIDEO_REEL"

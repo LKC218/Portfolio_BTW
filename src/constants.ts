@@ -1,6 +1,8 @@
 
 import { Scene, Collection } from './types';
 
+const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+
 export const ACCENT_COLORS = {
   NEON_RED: '#FF003C',
   ACID_GREEN: '#CCFF00',
@@ -13,11 +15,11 @@ export const ACCENT_COLORS = {
 };
 
 export const PLACEHOLDER_IMAGES = {
-  PORTRAIT_1: '/assets/占位符竖板.png',
-  PORTRAIT_2: '/assets/占位符竖板2.png',
-  PORTRAIT_3: '/assets/占位符竖板3.png',
-  PORTRAIT_4: '/assets/占位符竖板4.png',
-  LANDSCAPE: '/assets/占位符横板.png',
+  PORTRAIT_1: assetPath('assets/占位符竖板.png'),
+  PORTRAIT_2: assetPath('assets/占位符竖板2.png'),
+  PORTRAIT_3: assetPath('assets/占位符竖板3.png'),
+  PORTRAIT_4: assetPath('assets/占位符竖板4.png'),
+  LANDSCAPE: assetPath('assets/占位符横板.png'),
 };
 
 const DEFAULT_DETAIL_IMAGES: [string, string, string] = [
@@ -28,7 +30,7 @@ const DEFAULT_DETAIL_IMAGES: [string, string, string] = [
 
 // 背景音乐配置
 export const BGM_CONFIG = {
-  url: '/assets/audio/bgm_main.mp3', 
+  url: assetPath('assets/audio/bgm_main.mp3'), 
   volume: 0.3,
   autoPlay: true
 };
@@ -40,7 +42,7 @@ export const BGM_CONFIG = {
 export const COLLECTIONS: Collection[] = [
   // --- PAGE 1 ---
   { id: 'C-01', title: 'BTW_通道1', subtitle: 'BTW_PASSAGE1', description: '1号撤离通道。', color: '#CCFF00',
-    image: '/assets/BTW/BTW_Scenes_1_卡片页.jpg' },
+    image: assetPath('assets/BTW/BTW_Scenes_1_卡片页.jpg') },
   { id: 'C-02', title: 'BTW_通道2', subtitle: 'BTW_PASSAGE2', description: '2号撤离通道。', color: '#FCEE0A',
     // image: '/assets/collections/cover_02.jpg',
     image: PLACEHOLDER_IMAGES.PORTRAIT_2 },
@@ -137,14 +139,14 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
       id: '01', title: '通道1镜头1', 
       // borderColor: '#FFFFFF', // [示例] 强制白色边框
       // transitionColor: '#000000', // [示例] 黑色转场
-      mainImage: '/assets/BTW/BTW_Scenes_1_1.jpg',
+      mainImage: assetPath('assets/BTW/BTW_Scenes_1_1.jpg'),
       detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '通道1镜头2', mainImage: '/assets/BTW/BTW_Scenes_1_2.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
-    { id: '03', title: '通道1镜头3', mainImage: '/assets/BTW/BTW_Scenes_1_3.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
-    { id: '04', title: '通道1镜头4', mainImage: '/assets/BTW/BTW_Scenes_1_4.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
-    { id: '05', title: '通道1镜头5', mainImage: '/assets/BTW/BTW_Scenes_1_5.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
-    { id: '06', title: '通道1镜头6', mainImage: '/assets/BTW/BTW_Scenes_1_6.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '02', title: '通道1镜头2', mainImage: assetPath('assets/BTW/BTW_Scenes_1_2.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '通道1镜头3', mainImage: assetPath('assets/BTW/BTW_Scenes_1_3.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '通道1镜头4', mainImage: assetPath('assets/BTW/BTW_Scenes_1_4.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '通道1镜头5', mainImage: assetPath('assets/BTW/BTW_Scenes_1_5.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '通道1镜头6', mainImage: assetPath('assets/BTW/BTW_Scenes_1_6.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -172,15 +174,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '垂直通道镜头1', 
       // local: '/assets/c03/s01_main.jpg',
-      mainImage: '/assets/BTW/BTW_Scenes_3_1.jpg', 
+      mainImage: assetPath('assets/BTW/BTW_Scenes_3_1.jpg'), 
       // local: ['/assets/c03/s01_h1.jpg', '/assets/c03/s01_h2.jpg', '/assets/c03/s01_h3.jpg'],
       detailImages: DEFAULT_DETAIL_IMAGES 
     },
-    { id: '02', title: '垂直通道镜头2', mainImage: '/assets/BTW/BTW_Scenes_3_2.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
-    { id: '03', title: '垂直通道镜头3', mainImage: '/assets/BTW/BTW_Scenes_3_3.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
-    { id: '04', title: '垂直通道镜头4', mainImage: '/assets/BTW/BTW_Scenes_3_4.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
-    { id: '05', title: '垂直通道镜头5', mainImage: '/assets/BTW/BTW_Scenes_3_5.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
-    { id: '06', title: '垂直通道镜头6', mainImage: '/assets/BTW/BTW_Scenes_3_6.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '02', title: '垂直通道镜头2', mainImage: assetPath('assets/BTW/BTW_Scenes_3_2.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '垂直通道镜头3', mainImage: assetPath('assets/BTW/BTW_Scenes_3_3.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '垂直通道镜头4', mainImage: assetPath('assets/BTW/BTW_Scenes_3_4.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '垂直通道镜头5', mainImage: assetPath('assets/BTW/BTW_Scenes_3_5.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '垂直通道镜头6', mainImage: assetPath('assets/BTW/BTW_Scenes_3_6.jpg'), detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -490,7 +492,7 @@ export const getScenesForCollection = (collectionId: string): Scene[] => {
           title: '场景细节 A',
           description: '系统扫描显示的第一个关键兴趣点。',
           detailImage: item.detailImages[0],
-          modelUrl: '/assets/models/placeholder.glb'
+          modelUrl: assetPath('assets/models/placeholder.glb')
         },
         {
           id: 'h2',
@@ -499,7 +501,7 @@ export const getScenesForCollection = (collectionId: string): Scene[] => {
           title: '场景细节 B',
           description: '检测到与背景形成对比的纹理结构。',
           detailImage: item.detailImages[1],
-          modelUrl: '/assets/models/placeholder.glb'
+          modelUrl: assetPath('assets/models/placeholder.glb')
         },
         {
           id: 'h3',
@@ -508,7 +510,7 @@ export const getScenesForCollection = (collectionId: string): Scene[] => {
           title: '场景细节 C',
           description: '该区域的环境光照与材质反射率分析。',
           detailImage: item.detailImages[2],
-          modelUrl: '/assets/models/placeholder.glb'
+          modelUrl: assetPath('assets/models/placeholder.glb')
         }
       ]
     };

@@ -23,12 +23,14 @@ gsap.registerPlugin(SplitText);
 // 配置常量
 // ============================================
 
+const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+
 /** Hero 区域配置 */
 const HERO_CONFIG = {
   images: [
-    '/assets/首页大图.jpg',
-    '/assets/首页大图2.jpg',
-    '/assets/首页大图3.jpg'
+    assetPath('assets/首页大图.jpg'),
+    assetPath('assets/首页大图2.jpg'),
+    assetPath('assets/首页大图3.jpg')
   ],
   accentColor: '#CCFF00', 
   bigText: 'Environment Art',
