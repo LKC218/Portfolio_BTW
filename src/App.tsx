@@ -1,5 +1,6 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import gsap from 'gsap';
 import { COLLECTIONS, getScenesForCollection } from './constants';
 import { Scene, Collection, AppState, Hotspot } from './types';
 import GridOverlay from './components/layout/GridOverlay';
@@ -14,6 +15,8 @@ const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.HOME);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [selectedScene, setSelectedScene] = useState<Scene | null>(null);
+  const [isSharedTitleTransitioning, setIsSharedTitleTransitioning] = useState(false);
+  const sharedTitleCloneRef = useRef<HTMLElement | null>(null);
   
   // Ambient Color State (Driven by Hover in Gallery/Home or Selection in Viewer)
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
@@ -75,8 +78,106 @@ const App: React.FC = () => {
       navigate(AppState.HOME, null, '#fff');
   }, [navigate]);
 
+  const clearSharedTitleClone = useCallback(() => {
+      if (!sharedTitleCloneRef.current) return;
+      sharedTitleCloneRef.current.remove();
+      sharedTitleCloneRef.current = null;
+  }, []);
+
+  const handleSharedTitleBackToHome = useCallback((sourceElement: HTMLElement) => {
+      if (isSharedTitleTransitioning || appState === AppState.HOME) return;
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) {
+          handleBackToHome();
+          return;
+      }
+
+      clearSharedTitleClone();
+      setIsSharedTitleTransitioning(true);
+      setActiveHotspot(null);
+      setHoveredColor(null);
+
+      const sourceRect = sourceElement.getBoundingClientRect();
+      const clone = sourceElement.cloneNode(true) as HTMLElement;
+      const previousVisibility = sourceElement.style.visibility;
+
+      sourceElement.style.visibility = 'hidden';
+      clone.setAttribute('aria-hidden', 'true');
+      clone.style.position = 'fixed';
+      clone.style.left = `${sourceRect.left}px`;
+      clone.style.top = `${sourceRect.top}px`;
+      clone.style.width = `${sourceRect.width}px`;
+      clone.style.height = `${sourceRect.height}px`;
+      clone.style.margin = '0';
+      clone.style.zIndex = '250';
+      clone.style.pointerEvents = 'none';
+      clone.style.transformOrigin = 'left top';
+      clone.style.willChange = 'transform, opacity, filter';
+      clone.style.contain = 'layout paint';
+      document.body.appendChild(clone);
+      sharedTitleCloneRef.current = clone;
+
+      const peakScale = window.innerWidth < 768 ? 1.25 : 1.75;
+      const settleScale = window.innerWidth < 768 ? 0.72 : 0.86;
+      const peakX = Math.max(24, window.innerWidth * 0.05);
+      const peakY = Math.max(28, window.innerHeight * 0.16);
+      const settleX = Math.max(24, window.innerWidth * 0.06);
+      const settleY = Math.max(24, window.innerHeight * 0.08);
+      const peakDeltaX = peakX - sourceRect.left;
+      const peakDeltaY = peakY - sourceRect.top;
+      const settleDeltaX = settleX - sourceRect.left;
+      const settleDeltaY = settleY - sourceRect.top;
+      const galleryRoot = document.querySelector('[data-gallery-root]');
+
+      const tl = gsap.timeline({
+          defaults: { ease: 'expo.inOut' },
+          onComplete: () => {
+              sourceElement.style.visibility = previousVisibility;
+              setSelectedCollection(null);
+              setSelectedScene(null);
+              setAppState(AppState.HOME);
+              setTransitionStatus('idle');
+              clearSharedTitleClone();
+              setIsSharedTitleTransitioning(false);
+          }
+      });
+
+      tl.to(clone, {
+          x: peakDeltaX,
+          y: peakDeltaY,
+          scale: peakScale,
+          color: '#CCFF00',
+          filter: 'drop-shadow(0 0 18px rgba(204,255,0,0.45))',
+          duration: 0.82
+      })
+      .to(clone, {
+          x: settleDeltaX,
+          y: settleDeltaY,
+          scale: settleScale,
+          opacity: 0,
+          filter: 'blur(6px)',
+          duration: 0.38,
+          ease: 'power3.in'
+      }, 0.78)
+      .to(galleryRoot, {
+          opacity: 0,
+          scale: 0.985,
+          filter: 'brightness(0.55) blur(2px)',
+          duration: 0.72,
+          ease: 'power3.inOut'
+      }, 0.08)
+      .to('.gallery-card', {
+          yPercent: 5,
+          opacity: 0,
+          duration: 0.58,
+          stagger: 0.035,
+          ease: 'power3.in'
+      }, 0.12);
+  }, [appState, clearSharedTitleClone, handleBackToHome, isSharedTitleTransitioning]);
+
   return (
-    <div className="relative min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background overflow-hidden transition-colors duration-500">
+    <div className="relative min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background transition-colors duration-500">
 
 
       {/* Full Screen Transition Overlay */}
@@ -136,6 +237,7 @@ const App: React.FC = () => {
                 onSelect={handleSelectScene} 
                 onHover={(color) => setHoveredColor(color)}
                 onBack={handleBackToHome}
+                onSharedTitleBack={handleSharedTitleBackToHome}
             />
         )}
 

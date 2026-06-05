@@ -12,6 +12,20 @@ export const ACCENT_COLORS = {
   TOXIC_TEAL: '#00FFA3',
 };
 
+export const PLACEHOLDER_IMAGES = {
+  PORTRAIT_1: '/assets/占位符竖板.png',
+  PORTRAIT_2: '/assets/占位符竖板2.png',
+  PORTRAIT_3: '/assets/占位符竖板3.png',
+  PORTRAIT_4: '/assets/占位符竖板4.png',
+  LANDSCAPE: '/assets/占位符横板.png',
+};
+
+const DEFAULT_DETAIL_IMAGES: [string, string, string] = [
+  PLACEHOLDER_IMAGES.LANDSCAPE,
+  PLACEHOLDER_IMAGES.LANDSCAPE,
+  PLACEHOLDER_IMAGES.LANDSCAPE
+];
+
 // 背景音乐配置
 export const BGM_CONFIG = {
   url: '/assets/audio/bgm_main.mp3', 
@@ -29,65 +43,65 @@ export const COLLECTIONS: Collection[] = [
     image: '/assets/BTW/BTW_Scenes_1_卡片页.jpg' },
   { id: 'C-02', title: 'BTW_通道2', subtitle: 'BTW_PASSAGE2', description: '2号撤离通道。', color: '#FCEE0A',
     // image: '/assets/collections/cover_02.jpg',
-    image: '/assets/占位符竖板2.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_2 },
   { id: 'C-03', title: 'BTW_垂直通道', subtitle: 'THE WASTELANDS', description: '垂直燃料管道。', color: ACCENT_COLORS.ELECTRIC_BLUE,
     // image: '/assets/collections/cover_03.jpg',
-    image: '/assets/占位符竖板3.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_3 },
   
   // --- PAGE 2 ---
   { id: 'C-04', title: '数字虚空', subtitle: 'DIGITAL VOID', description: '深层网络节点。', color: ACCENT_COLORS.ELECTRIC_BLUE,
     // image: '/assets/collections/cover_04.jpg',
-    image: '/assets/占位符竖板4.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_4 },
   { id: 'C-05', title: '地下黑市', subtitle: 'UNDERGROUND MARKET', description: '非法交易地带。', color: ACCENT_COLORS.PLASMA_PURPLE,
     // image: '/assets/collections/cover_05.jpg',
-    image: '/assets/占位符竖板.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_1 },
   { id: 'C-06', title: '重工铸造', subtitle: 'HEAVY FOUNDRY', description: '自动化机械生产线。', color: ACCENT_COLORS.MECHANICAL_ORANGE,
     // image: '/assets/collections/cover_06.jpg',
-    image: '/assets/占位符竖板2.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_2 },
 
   // --- PAGE 3 ---
   { id: 'C-07', title: '深海前哨', subtitle: 'OCEANIC OUTPOST', description: '深渊生物科研站。', color: ACCENT_COLORS.TOXIC_TEAL,
     // image: '/assets/collections/cover_07.jpg',
-    image: '/assets/占位符竖板3.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_3 },
   { id: 'C-08', title: '轨道空间站', subtitle: 'ORBITAL STATION', description: '低地轨道枢纽。', color: ACCENT_COLORS.CYBER_WHITE,
     // image: '/assets/collections/cover_08.jpg',
-    image: '/assets/占位符竖板4.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_4 },
   { id: 'C-09', title: '地下城', subtitle: 'SUBTERRANEAN CITY', description: '巨大地下蜂巢。', color: ACCENT_COLORS.MECHANICAL_ORANGE,
     // image: '/assets/collections/cover_09.jpg',
-    image: '/assets/占位符竖板.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_1 },
 
   // --- PAGE 4 ---
   { id: 'C-10', title: '仿生花园', subtitle: 'SYNTHETIC GARDEN', description: '人造自然模拟区。', color: ACCENT_COLORS.ACID_GREEN,
     // image: '/assets/collections/cover_10.jpg',
-    image: '/assets/占位符竖板2.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_2 },
   { id: 'C-11', title: '机甲机库', subtitle: 'MECHA HANGAR', description: '巨型作战机甲库。', color: ACCENT_COLORS.NEON_RED,
     // image: '/assets/collections/cover_11.jpg',
-    image: '/assets/占位符竖板3.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_3 },
   { id: 'C-12', title: '数据堡垒', subtitle: 'DATA FORTRESS', description: '核心服务器群。', color: ACCENT_COLORS.ELECTRIC_BLUE,
     // image: '/assets/collections/cover_12.jpg',
-    image: '/assets/占位符竖板4.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_4 },
 
   // --- PAGE 5 ---
   { id: 'C-13', title: '隔离扇区', subtitle: 'QUARANTINE SECTOR', description: '病毒封锁区域。', color: ACCENT_COLORS.WARNING_YELLOW,
     // image: '/assets/collections/cover_13.jpg',
-    image: '/assets/占位符竖板.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_1 },
   { id: 'C-14', title: 'AI 蜂巢', subtitle: 'AI HIVE MIND', description: '意识网络节点。', color: ACCENT_COLORS.PLASMA_PURPLE,
     // image: '/assets/collections/cover_14.jpg',
-    image: '/assets/占位符竖板2.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_2 },
   { id: 'C-15', title: '能源矩阵', subtitle: 'ENERGY MATRIX', description: '聚变反应堆群。', color: ACCENT_COLORS.ELECTRIC_BLUE,
     // image: '/assets/collections/cover_15.jpg',
-    image: '/assets/占位符竖板3.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_3 },
 
   // --- PAGE 6 ---
   { id: 'C-16', title: '虚空边缘', subtitle: 'VOID EDGE', description: '赛博空间交界。', color: ACCENT_COLORS.CYBER_WHITE,
     // image: '/assets/collections/cover_16.jpg',
-    image: '/assets/占位符竖板4.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_4 },
   { id: 'C-17', title: '记忆存储库', subtitle: 'MEMORY BANK', description: '记忆备份档案馆。', color: ACCENT_COLORS.TOXIC_TEAL,
     // image: '/assets/collections/cover_17.jpg',
-    image: '/assets/占位符竖板.png' },
+    image: PLACEHOLDER_IMAGES.PORTRAIT_1 },
   { id: 'C-18', title: '终焉之地', subtitle: 'TERMINUS', description: '旧时代的终点。', color: ACCENT_COLORS.NEON_RED,
     // image: '/assets/collections/cover_18.jpg',
-    image: '/assets/占位符竖板2.png' }
+    image: PLACEHOLDER_IMAGES.PORTRAIT_2 }
 ];
 
 // ==================================================================================
@@ -124,13 +138,13 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
       // borderColor: '#FFFFFF', // [示例] 强制白色边框
       // transitionColor: '#000000', // [示例] 黑色转场
       mainImage: '/assets/BTW/BTW_Scenes_1_1.jpg',
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '通道1镜头2', mainImage: '/assets/BTW/BTW_Scenes_1_2.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '通道1镜头3', mainImage: '/assets/BTW/BTW_Scenes_1_3.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '通道1镜头4', mainImage: '/assets/BTW/BTW_Scenes_1_4.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '通道1镜头5', mainImage: '/assets/BTW/BTW_Scenes_1_5.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '通道1镜头6', mainImage: '/assets/BTW/BTW_Scenes_1_6.jpg', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '通道1镜头2', mainImage: '/assets/BTW/BTW_Scenes_1_2.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '通道1镜头3', mainImage: '/assets/BTW/BTW_Scenes_1_3.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '通道1镜头4', mainImage: '/assets/BTW/BTW_Scenes_1_4.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '通道1镜头5', mainImage: '/assets/BTW/BTW_Scenes_1_5.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '通道1镜头6', mainImage: '/assets/BTW/BTW_Scenes_1_6.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -140,15 +154,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '通道2镜头1', 
       // local: '/assets/c02/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png', 
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, 
       // local: ['/assets/c02/s01_h1.jpg', '/assets/c02/s01_h2.jpg', '/assets/c02/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] 
+      detailImages: DEFAULT_DETAIL_IMAGES 
     },
-    { id: '02', title: '通道2镜头2', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '通道2镜头3', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '通道2镜头4', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '通道2镜头5', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '通道2镜头6', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '通道2镜头2', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '通道2镜头3', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '通道2镜头4', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '通道2镜头5', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '通道2镜头6', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -158,15 +172,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '垂直通道镜头1', 
       // local: '/assets/c03/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png', 
+      mainImage: '/assets/BTW/BTW_Scenes_3_1.jpg', 
       // local: ['/assets/c03/s01_h1.jpg', '/assets/c03/s01_h2.jpg', '/assets/c03/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] 
+      detailImages: DEFAULT_DETAIL_IMAGES 
     },
-    { id: '02', title: '垂直通道镜头2', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '垂直通道镜头3', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '垂直通道镜头4', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '垂直通道镜头5', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '垂直通道镜头6', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '垂直通道镜头2', mainImage: '/assets/BTW/BTW_Scenes_3_2.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '垂直通道镜头3', mainImage: '/assets/BTW/BTW_Scenes_3_3.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '垂直通道镜头4', mainImage: '/assets/BTW/BTW_Scenes_3_4.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '垂直通道镜头5', mainImage: '/assets/BTW/BTW_Scenes_3_5.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '垂直通道镜头6', mainImage: '/assets/BTW/BTW_Scenes_3_6.jpg', detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -176,15 +190,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '核心节点', 
       // local: '/assets/c04/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c04/s01_h1.jpg', '/assets/c04/s01_h2.jpg', '/assets/c04/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '防火墙边界', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '数据流通道', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '记忆缓存区', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '协议网关', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '逻辑深渊', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '防火墙边界', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '数据流通道', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '记忆缓存区', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '协议网关', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '逻辑深渊', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -194,15 +208,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '霓虹入口', 
       // local: '/assets/c05/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c05/s01_h1.jpg', '/assets/c05/s01_h2.jpg', '/assets/c05/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '义体诊所', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '走私仓库', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '地下面摊', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '废旧回收站', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '隐秘后巷', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '义体诊所', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '走私仓库', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '地下面摊', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '废旧回收站', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '隐秘后巷', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -212,15 +226,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '熔炼中心', 
       // local: '/assets/c06/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c06/s01_h1.jpg', '/assets/c06/s01_h2.jpg', '/assets/c06/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '机械臂走廊', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '冷却池', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '冲压车间', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '动力室', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '排气管道', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '机械臂走廊', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '冷却池', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '冲压车间', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '动力室', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '排气管道', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -230,15 +244,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '深潜气闸', 
       // local: '/assets/c07/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c07/s01_h1.jpg', '/assets/c07/s01_h2.jpg', '/assets/c07/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '压力测试舱', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '海底观测窗', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '样本分析室', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '氧气循环站', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '黑暗海沟', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '压力测试舱', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '海底观测窗', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '样本分析室', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '氧气循环站', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '黑暗海沟', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -248,15 +262,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '停泊码头', 
       // local: '/assets/c08/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c08/s01_h1.jpg', '/assets/c08/s01_h2.jpg', '/assets/c08/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '重力环廊', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '太阳能阵列', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '指挥舰桥', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '货物传输带', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '星空瞭望台', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '重力环廊', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '太阳能阵列', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '指挥舰桥', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '货物传输带', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '星空瞭望台', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -266,15 +280,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '地底广场', 
       // local: '/assets/c09/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c09/s01_h1.jpg', '/assets/c09/s01_h2.jpg', '/assets/c09/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '垂直农场', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '地热发电机', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '蜂巢居住区', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '污水净化厂', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '岩层隧道', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '垂直农场', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '地热发电机', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '蜂巢居住区', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '污水净化厂', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '岩层隧道', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -284,15 +298,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '全息温室', 
       // local: '/assets/c10/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c10/s01_h1.jpg', '/assets/c10/s01_h2.jpg', '/assets/c10/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '基因培养槽', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '人造瀑布', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '拟态树林', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '种子冷库', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '气候控制室', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '基因培养槽', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '人造瀑布', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '拟态树林', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '种子冷库', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '气候控制室', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -302,15 +316,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '主机库', 
       // local: '/assets/c11/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c11/s01_h1.jpg', '/assets/c11/s01_h2.jpg', '/assets/c11/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '武器装配台', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '驾驶模拟舱', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '燃料加注站', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '维修升降机', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '战备通道', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '武器装配台', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '驾驶模拟舱', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '燃料加注站', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '维修升降机', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '战备通道', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -320,15 +334,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '服务器巨塔', 
       // local: '/assets/c12/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c12/s01_h1.jpg', '/assets/c12/s01_h2.jpg', '/assets/c12/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '冷却矩阵', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '光纤井', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '量子加密室', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '数据档案馆', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '物理防火墙', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '冷却矩阵', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '光纤井', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '量子加密室', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '数据档案馆', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '物理防火墙', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -338,15 +352,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '隔离关卡', 
       // local: '/assets/c13/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c13/s01_h1.jpg', '/assets/c13/s01_h2.jpg', '/assets/c13/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '消毒通道', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '临时医疗帐', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '封锁墙', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '废弃街道', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '危险源点', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '消毒通道', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '临时医疗帐', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '封锁墙', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '废弃街道', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '危险源点', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -356,15 +370,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '神经网络', 
       // local: '/assets/c14/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c14/s01_h1.jpg', '/assets/c14/s01_h2.jpg', '/assets/c14/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '逻辑门阵列', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '意识上传口', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '虚拟梦境', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '核心处理器', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '散热风扇', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '逻辑门阵列', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '意识上传口', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '虚拟梦境', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '核心处理器', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '散热风扇', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -374,15 +388,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '聚变反应堆', 
       // local: '/assets/c15/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c15/s01_h1.jpg', '/assets/c15/s01_h2.jpg', '/assets/c15/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '磁场约束环', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '高压变电器', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '能量传输管', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '控制中心', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '废热排放口', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '磁场约束环', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '高压变电器', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '能量传输管', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '控制中心', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '废热排放口', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -392,15 +406,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '现实裂缝', 
       // local: '/assets/c16/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c16/s01_h1.jpg', '/assets/c16/s01_h2.jpg', '/assets/c16/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '乱码风暴', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '边界信标', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '虚无空间', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '错误扇区', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '遗忘之地', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '乱码风暴', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '边界信标', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '虚无空间', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '错误扇区', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '遗忘之地', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -410,15 +424,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '记忆存储塔', 
       // local: '/assets/c17/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c17/s01_h1.jpg', '/assets/c17/s01_h2.jpg', '/assets/c17/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '检索终端', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '记忆回放室', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '情感提取机', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '备份服务器', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '数据墓地', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '检索终端', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '记忆回放室', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '情感提取机', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '备份服务器', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '数据墓地', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 
   // --------------------------------------------------------------------------------
@@ -428,15 +442,15 @@ export const SCENES_DB: Record<string, RawSceneConfig[]> = {
     { 
       id: '01', title: '终焉之门', 
       // local: '/assets/c18/s01_main.jpg',
-      mainImage: '/assets/占位符竖板.png',
+      mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1,
       // local: ['/assets/c18/s01_h1.jpg', '/assets/c18/s01_h2.jpg', '/assets/c18/s01_h3.jpg'],
-      detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png']
+      detailImages: DEFAULT_DETAIL_IMAGES
     },
-    { id: '02', title: '最后的站台', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '03', title: '纪念碑谷', mainImage: '/assets/占位符竖板3.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '04', title: '逃逸飞船', mainImage: '/assets/占位符竖板4.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '05', title: '时间胶囊', mainImage: '/assets/占位符竖板.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
-    { id: '06', title: '寂静大厅', mainImage: '/assets/占位符竖板2.png', detailImages: ['/assets/占位符横板.png', '/assets/占位符横板.png', '/assets/占位符横板.png'] },
+    { id: '02', title: '最后的站台', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '03', title: '纪念碑谷', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_3, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '04', title: '逃逸飞船', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_4, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '05', title: '时间胶囊', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_1, detailImages: DEFAULT_DETAIL_IMAGES },
+    { id: '06', title: '寂静大厅', mainImage: PLACEHOLDER_IMAGES.PORTRAIT_2, detailImages: DEFAULT_DETAIL_IMAGES },
   ],
 };
 

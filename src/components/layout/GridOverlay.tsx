@@ -80,8 +80,8 @@ const GridOverlay: React.FC<GridOverlayProps> = ({ accentColor, hotspotFocus }) 
       <div 
         className={`absolute border border-foreground/5 rounded-full flex items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isMobileLandscape ? 'w-[30vw] h-[30vw]' : isMobile ? 'w-[40vw] h-[40vw]' : 'md:w-[20vw] md:h-[20vw] w-[40vw] h-[40vw]'}`}
         style={{ 
-            top: hotspotFocus ? `${hotspotFocus.y}%` : '50%', 
-            left: hotspotFocus ? `${hotspotFocus.x}%` : '50%',
+            top: hotspotFocus && Number.isFinite(hotspotFocus.y) ? `${hotspotFocus.y}%` : '50%', 
+            left: hotspotFocus && Number.isFinite(hotspotFocus.x) ? `${hotspotFocus.x}%` : '50%',
             transform: 'translate(-50%, -50%)',
             opacity: hotspotFocus ? 1 : 0.4,
             borderColor: hotspotFocus ? primaryColor : undefined

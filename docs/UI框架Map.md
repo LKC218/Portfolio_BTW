@@ -13,8 +13,14 @@ App.tsx (根组件)
 ├── GridOverlay (背景覆盖层 - 全局常驻)
 ├── <main> 主内容区 (按 AppState 切换)
 │   ├── HomeSelection (HOME 状态)
+│   │   ├── HeroSection (Hero 区域: 轮播 + 顶栏 + 时钟 + 标语 + 点阵噪声)
+│   │   │   └── RollingClock (实时时钟)
+│   │   ├── 作品集卡片网格
+│   │   └── ScrollVideo (第一组卡片下方, 滚动驱动视频)
 │   ├── Gallery (GALLERY 状态)
 │   └── SceneViewer (VIEWER 状态)
+│       ├── 热点交互层
+│       │   └── HotspotPreview (桌面端热点悬停预览)
 │       └── DetailCard (热点详情卡片)
 │           ├── ModelViewer (3D 模型查看器)
 │           └── FullscreenModelViewer (全屏 3D 弹窗)
@@ -46,6 +52,41 @@ App.tsx (根组件)
 **动画引擎**: GSAP (`gsap` + `@gsap/react` 的 `useGSAP`)
 **无障碍**: `prefers-reduced-motion` 检测，启用时跳过所有 GSAP 动画
 
+```
+HomeSelection
+├── HeroSection (独立组件, 详见下方 2.4 节)
+│
+├── 作品集卡片网格 (每组3张，分页排列)
+│   └── 作品集卡片 ×N
+│       ├── 背景图片 (来自 `src/constants.ts` 的 `COLLECTIONS[].image`；悬停放大 + 扫描线覆盖)
+│       ├── 渐变底部遮罩
+│       ├── 左上角 ID 标签 (如 "C-01") + 强调色横线 (悬停展开)
+│       ├── 中心旋转方框图标 (悬停显示, Square 12s 旋转)
+│       ├── 底部文字区 (subtitle / title / description, 悬停上移)
+│       ├── "ACCESS DATA" 按钮 (悬停显示, 桌面端)
+│       └── 上下强调色边线 (悬停展开, cubic-bezier 弹性)
+│
+├── ScrollVideo (第一组卡片下方, 详见 2.5 节)
+│
+├── 滚动字幕分隔条 (Marquee Divider, 每组卡片后)
+│   └── 重复大字 "Environment_Art /// Collection_0X" (滚动驱动位移, 奇偶组反向)
+│
+└── 页脚终止标记 (竖线 + "End" + 圆点)
+```
+
+**关键交互**:
+- 卡片悬停 → 背景图片放大/去灰度、强调色边线展开、中心图标旋转显示
+- 滚动 → 字幕分隔条水平位移
+- 点击卡片 → 触发 `onSelect`，进入 GALLERY 状态
+
+---
+
+### 2.2 Hero 区域 — HeroSection
+
+**文件**: `src/components/pages/HeroSection.tsx`
+**动画引擎**: GSAP (`gsap` + `@gsap/react` 的 `useGSAP`) + `gsap/SplitText`
+**无障碍**: `prefers-reduced-motion` 检测，启用时跳过所有 GSAP 动画
+
 **动画常量**:
 
 | 常量 | 值 | 用途 |
@@ -62,18 +103,23 @@ App.tsx (根组件)
 | `BIGTEXT_STAGGER` | 0.04 | 字符入场交错间隔 (秒) |
 | `BIGTEXT_EASE` | `power4.out` | 字符入场缓动 |
 | `BIGTEXT_ENTER_DELAY` | 0.3 | 字符入场相对时间线起点的延迟 (秒) |
+| `SCRAMBLE_DURATION` | 520 | HUD 文本乱码解码动画时长 (ms) |
+| `DOT_GRID_SIZE` | 20 | 点阵噪声网格单元尺寸 (px) |
+| `DOT_NOISE_REFRESH_MS` | 180 | 点阵噪声刷新间隔 (ms) |
+| `DOT_DEFAULT_ACTIVE_RATE` | 0.02 | 默认活跃率 (2%) |
+| `DOT_HOVER_ACTIVE_RATE` | 0.05 | hover 时活跃率 (5%) |
 
 ```
-HomeSelection
+HeroSection
 ├── 顶部标题栏 (Header, absolute top-0, z-30, isolate, 玻璃态 + GSAP 动画)
 │   ├── 底层流光晕 (CCFF00 渐变, GSAP backgroundPosition 14s 循环, blur 28px)
-│   ├── 玻璃半透明层 (bg-background/30 + dark:bg-background/10; backdrop-blur-xl + dark:backdrop-blur-2xl; backdrop-saturate-150)
+│   ├── 玻璃半透明层 (bg-background/10 + backdrop-blur-2xl + backdrop-saturate-150)
 │   ├── 顶部高光细线 (白色 15% 透明渐变)
 │   ├── 底部流光线 (CCFF00 横向渐变, GSAP backgroundPosition 12s 循环, 带绿色辉光 box-shadow)
 │   ├── 标题组 (GSAP 3D 倾斜 + 视差)
-│   │   ├── 脉冲圆点 (暗色下 6px 绿色 drop-shadow) + "场景目录" 标签 (暗色下 text-shadow 描边, 视差系数 3)
-│   │   ├── 大标题 "作品集 集合" (渐变文字, 暗色下 text-shadow 兜底, 视差系数 6)
-│   │   └── 右侧元数据 (PC: TOTAL_SECTORS / SCROLL_MODE；移动端: 全屏切换按钮, 暗色下 text-shadow 描边)
+│   │   ├── 脉冲圆点 (6px 绿色 drop-shadow) + "场景目录" 标签 (text-shadow 描边, 视差系数 3)
+│   │   ├── 大标题 "作品集" (text-shadow 兜底, 视差系数 6)
+│   │   └── 右侧元数据 (PC: TOTAL_SECTORS / SCROLL_MODE；移动端: 全屏切换按钮)
 │   └── 底部分隔线 (h-px bg-border/10)
 │
 │   [GSAP 入场动画] 流光晕 opacity+scale → 流光线 scaleX → 脉冲圆点 scale(back.out) → 标签 y+opacity → 标题 y+opacity → 元数据 y+opacity
@@ -81,55 +127,44 @@ HomeSelection
 │   [GSAP 鼠标移动] 标题组 rotateX/rotateY (perspective 800) + 标签/标题 xy 视差位移
 │   [GSAP 鼠标离开] elastic.out(1, 0.5) 弹性回弹归零
 │
-├── 滚动内容区 (flex-1, overflow-y-auto)
-│   │
-│   ├── Hero 区域 (占 85-90vh, 背景延伸至顶栏下方)
-│   │   ├── 背景图片层 (视差滚动, translateY scrollTop*0.3)
-│   │   ├── 渐变遮罩 + 点阵覆盖层
-│   │   ├── 巨型背景文字 "Environment Art" (半透明叠加, mix-blend-overlay)
-│   │   ├── 荧光绿横条装饰线
-│   │   ├── 左下角命令行文字 (ACCESS_GRANTED + SYSTEM_ROOT 路径)
-│   │   └── 右下角
-│   │       ├── 实时时钟 (clamp 响应式超大字号渐变文字, WebkitTextStroke, 外层 max-w-full + overflow-hidden 防止窄桌面溢出)
-│   │       ├── 荧光绿斜切标签 "作品集 // LKC218" (GSAP 3D 倾斜 + 视差)
-│   │       │   ├── 容器: skewX -12, transformPerspective 600, transformOrigin bottom right
-│   │       │   ├── 文字: skewX 12 (反向补偿)
-│   │       │   ├── 高光扫过层 (sloganShineRef, linear-gradient 105°, GSAP xPercent -100→100)
-│   │       │   │
-│   │       │   [GSAP 悬停] scale 1.05 (back.out) + letterSpacing 0.35em + textShadow + 高光扫过
-│   │       │   [GSAP 鼠标移动] rotateX/rotateY (max 15°) + 文字视差 (系数 4) + 动态 boxShadow (偏移随倾斜方向)
-│   │       │   [GSAP 鼠标离开] elastic.out(1, 0.5) 弹性回弹 + boxShadow 归零
-│   │       │
-│   │       └── 版本号 "LIVE // Personal Work"
-│   │
-│   ├── 作品集卡片网格 (每组3张，分页排列)
-│   │   └── 作品集卡片 ×N
-│   │       ├── 背景图片 (来自 `src/constants.ts` 的 `COLLECTIONS[].image`，C-01 使用 `/assets/BTW/BTW_Scenes_1_卡片页.jpg`；悬停放大 + 扫描线覆盖, 暗模式灰度+低亮度)
-│   │       ├── 渐变底部遮罩
-│   │       ├── 左上角 ID 标签 (如 "C-01") + 强调色横线 (悬停展开)
-│   │       ├── 中心旋转方框图标 (悬停显示, Square 12s 旋转)
-│   │       ├── 底部文字区 (subtitle / title / description, 悬停上移)
-│   │       ├── "ACCESS DATA" 按钮 (悬停显示, 桌面端)
-│   │       └── 上下强调色边线 (悬停展开, cubic-bezier 弹性)
-│   │
-│   ├── 滚动字幕分隔条 (Marquee Divider)
-│   │   └── 重复大字 "Environment_Art /// Collection_0X" (滚动驱动位移, 奇偶组反向)
-│   │
-│   └── 页脚终止标记 (竖线 + "End" + 圆点)
+├── 背景轮播 (sliderContainerRef, GSAP timeline 无缝循环)
+│   ├── 图片 ×N (绝对定位, 100% 间隔排列, translateY 切换)
+│   ├── 渐变遮罩 (from-background via-transparent to-black/30)
+│   └── 点阵噪声覆盖层 (ASCII 字符网格, hover 时活跃率 2%→5%)
+│       ├── 随机位置白色字符 (opacity 0.08~0.13)
+│       └── 15% 概率 #CCFF00 高亮字符 (opacity 0.14~0.18, 带绿色辉光 text-shadow)
+│
+├── 巨型背景文字 "Environment Art" (半透明叠加, mix-blend-overlay, SplitText 字符 stagger 入场)
+│
+├── 底部内容区 (z-20)
+│   ├── 左下角 HUD 信息 (ACCESS_GRANTED / SYSTEM_ROOT, hover 时 playTextScramble 乱码解码)
+│   ├── 水平装饰线 (CCFF00 50% 透明)
+│   └── 右下角
+│       ├── 实时时钟 (clamp 响应式超大字号, RollingClock)
+│       ├── 荧光绿斜切标签 "作品集 // LKC218" (GSAP 3D 倾斜 + 视差)
+│       │   ├── 容器: skewX -12, transformPerspective 600, transformOrigin bottom right
+│       │   ├── 文字: skewX 12 (反向补偿)
+│       │   ├── 高光扫过层 (sloganShineRef, linear-gradient 105°, GSAP xPercent -100→100)
+│       │   │
+│       │   [GSAP 悬停] scale 1.05 (back.out) + letterSpacing 0.35em + textShadow + 高光扫过 + playTextScramble
+│       │   [GSAP 鼠标移动] rotateX/rotateY (max 15°) + 文字视差 (系数 4) + 动态 boxShadow (偏移随倾斜方向)
+│       │   [GSAP 鼠标离开] elastic.out(1, 0.5) 弹性回弹 + boxShadow 归零
+│       │
+│       └── 版本号 "LIVE // Personal Work" (hover 时 playTextScramble)
 ```
 
 **关键交互**:
-- 卡片悬停 → 背景图片放大/去灰度、强调色边线展开、中心图标旋转显示
-- 滚动 → Hero 背景视差、字幕分隔条水平位移
-- 点击卡片 → 触发 `onSelect`，进入 GALLERY 状态
 - 顶栏鼠标移动 → 标题组 3D 倾斜 + 标签/标题视差位移
 - 顶栏悬停 → 流光动画加速 2.5x + 光晕增强
 - 斜切标签鼠标移动 → 3D 倾斜 + 文字视差 + 动态阴影
-- 斜切标签悬停 → 弹跳放大 + 字间距扩展 + 高光扫过
+- 斜切标签悬停 → 弹跳放大 + 字间距扩展 + 高光扫过 + 文本 scramble
+- HUD 文本 hover → playTextScramble 乱码解码动画
+- 点阵噪声区域 hover → 活跃率提升 2%→5%
+- 轮播自动切换 → 每张停留 4s + 1.2s 过渡 + 大文本字符 stagger 重新入场
 
 ---
 
-### 2.2 画廊 — Gallery
+### 2.3 画廊 — Gallery
 
 **文件**: `src/components/pages/Gallery.tsx`
 **动画引擎**: GSAP (`gsap` + `@gsap/react` 的 `useGSAP`)
@@ -152,7 +187,7 @@ Gallery
 ├── 全局标题栏 (Header, h-20/h-24, bg-background/80 backdrop-blur-sm)
 │   ├── 左侧
 │   │   ├── 红色脉冲圆点 + "Unity_READY" 标签
-│   │   └── 作品集标题 + ID
+│   │   └── 作品集标题 + ID (按钮态, 点击触发共享元素回首页转场)
 │   └── 右侧
 │       ├── 元数据 (GRID_X / GRID_Y / FPS + 提示文字)
 │       └── 返回按钮 (ArrowLeft 图标, 悬停反色)
@@ -170,7 +205,7 @@ Gallery
 │       ├── 底部内容区
 │       │   ├── 强调色分隔线 (GSAP scaleX 入场)
 │       │   ├── 英文副标题 (GSAP opacity 入场)
-│       │   ├── 中文主标题 (GSAP y+opacity 入场)
+│       │   ├── 中文主标题 (按钮态, GSAP y+opacity 入场, 点击触发共享元素回首页转场)
 │       │   └── [悬停展开] 描述文字 + "进入场景" 按钮
 │       └── 移动端触摸指示器 (Plus 图标圆圈)
 │
@@ -183,12 +218,13 @@ Gallery
 
 **关键交互**:
 - 卡片悬停 → 弹性伸缩(flex-[3])、边框高亮、描述展开
-- 点击卡片 → 触发 `onSelect`，进入 VIEWER 状态
+- 点击卡片非标题区域 → 触发 `onSelect`，进入 VIEWER 状态
+- 点击左上角作品集标题或卡片中文标题 → 触发 `onSharedTitleBack`，由 `App.tsx` 克隆标题元素并执行“放大移动到首页视觉区 → 缩小收回到顶部目标点 → 淡出切 HOME”的共享元素转场
 - 返回按钮 → 回到 HOME 状态
 
 ---
 
-### 2.3 场景查看器 — SceneViewer
+### 2.4 场景查看器 — SceneViewer
 
 **文件**: `src/components/pages/SceneViewer.tsx`
 
@@ -205,11 +241,12 @@ SceneViewer
 │   ├── 暗角效果 (Vignette, 亮色模式低透明度避免白雾)
 │   │
 │   ├── 热点交互层 (Hotspot Layer, z-30)
-│   │   └── 热点按钮 ×N
-│   │       ├── 脉冲圆环 (激活态, ping 动画)
-│   │       ├── 悬停圆环 (未激活态, scale+opacity 过渡)
-│   │       ├── 中心圆点 (激活时变强调色+shadow 发光)
-│   │       └── 标签气泡 (悬停显示热点标题, backdrop-blur-md)
+│   │   ├── 热点按钮 ×N
+│   │   │   ├── 脉冲圆环 (激活态, ping 动画)
+│   │   │   ├── 悬停圆环 (未激活态, scale+opacity 过渡)
+│   │   │   ├── 中心圆点 (激活时变强调色+shadow 发光)
+│   │   │   └── 标签气泡 (悬停显示热点标题, backdrop-blur-md)
+│   │   └── HotspotPreview (桌面端热点悬停预览卡片, z-60, 详见 2.5 节)
 │   │
 │   ├── 瞄准框 (Target Reticle, 热点激活时显示, z-30)
 │   │   └── 四角 L 形边框 + 十字线
@@ -237,9 +274,58 @@ SceneViewer
 
 **关键交互**:
 - 点击热点 → 背景图低透明度+模糊+灰度（显示 GridOverlay）、瞄准框定位、DetailCard 弹出
+- 桌面端热点悬停 → HotspotPreview 预览卡片跟随鼠标显示（含预览图 + 标题）
 - 移动端点击热点 → 14px 级触摸热区触发，竖版弹出底部抽屉，横版弹出右侧详情面板
 - 侧边栏悬停/点击 → 展开/收起；移动端通过右下角菜单按钮打开
 - 返回按钮 → 回到 GALLERY 状态
+
+---
+
+### 2.5 热点悬停预览 — HotspotPreview
+
+**文件**: `src/components/pages/HotspotPreview.tsx`
+**位置**: SceneViewer 热点交互层内，z-60，仅桌面端显示
+
+```
+HotspotPreview
+└── 预览容器 (fixed, pointer-events-none, clip-path + opacity 过渡)
+    ├── 预览卡片 (w-64, bg-black/80, backdrop-blur-xl, rounded-xl)
+    │   ├── 预览图片 (aspect-[4/3], hover 时 scale 100→100)
+    │   ├── 渐变遮罩 (from-black/70 via-black/10 to-transparent)
+    │   └── 标题栏 (标题 + "PREVIEW" 标签)
+    └── 连接线 (h-4, 白色渐变, 从卡片底部到鼠标方向)
+```
+
+**技术要点**:
+- `requestAnimationFrame` + 线性插值 (LERP 0.14) 平滑跟随鼠标
+- 视口边界限制: X [160, viewport-120], Y [220, viewport-120]
+- 基于水平速度的旋转效果: `velocityX * 0.08`，限制 ±6°
+- 展示/隐藏: `clip-path inset` + `opacity` 过渡 (380ms / 240ms)
+- `prefers-reduced-motion` 时直接设置位置，无 LERP 插值
+
+---
+
+### 2.6 滚动驱动视频 — ScrollVideo
+
+**文件**: `src/components/ui/ScrollVideo.tsx`
+**位置**: HomeSelection 第一组卡片下方
+**动画引擎**: GSAP ScrollTrigger (`gsap` + `gsap/ScrollTrigger`)
+
+```
+ScrollVideo
+├── 背景辉光 (radial-gradient, accentColor 33%, opacity 20%)
+├── 视频元素 (autoplay, loop, muted, playsInline)
+│   [GSAP ScrollTrigger] scale 0.6→1, opacity 0.5→1 (start: top 90%, end: top 30%, scrub 0.5)
+├── 加载状态 (旋转边框, accentColor)
+└── 标题覆盖层 (底部渐变, GSAP ScrollTrigger opacity+y 淡入)
+    ├── 副标题 (mono 9px, accentColor)
+    └── 主标题 + "// DEMO" 后缀
+```
+
+**技术要点**:
+- `IntersectionObserver` 离屏暂停 / 入屏播放 (threshold 0.1)
+- `gsap.context()` 包裹，清理时 `ctx.revert()`
+- `video.muted = true` + `playsInline` 确保自动播放策略兼容
 
 ---
 
@@ -409,6 +495,7 @@ AudioPlayer
 
 **快捷键**: Space 播放/暂停 | M 静音 | Esc 隐藏
 **配置**: `BGM_CONFIG` (url, volume 0.3, autoPlay true)
+**页面生命周期**: 切到其他标签页或窗口后台时暂停；返回页面时仅恢复由页面隐藏导致的暂停；刷新、关闭或跳转离开时暂停音频
 
 ---
 
@@ -526,18 +613,21 @@ ShimmerBar
 
 | 视觉特征 | 所属组件 | 文件路径 |
 |---|---|---|
-| 超大实时时钟 (渐变文字) | HomeSelection → Hero 时钟 | `src/components/pages/HomeSelection.tsx` |
-| 荧光绿斜切标签 "作品集 // LKC218" (3D 倾斜+视差+高光扫过) | HomeSelection → Hero 标语 | `src/components/pages/HomeSelection.tsx` |
-| 巨型半透明背景字 "Environment Art" (GSAP SplitText 字符 stagger 入场) | HomeSelection → Hero 背景字 | `src/components/pages/HomeSelection.tsx` |
-| 首页顶栏 玻璃态 + 流动渐变 (GSAP 驱动流光线+光晕) | HomeSelection → Header | `src/components/pages/HomeSelection.tsx` |
-| 首页顶栏 暗色专属半透明加深 (背景 10% + blur-2xl + 文字阴影兜底) | HomeSelection → Header | `src/components/pages/HomeSelection.tsx` |
-| 首页顶栏 鼠标移动时标题 3D 倾斜+视差 | HomeSelection → Header | `src/components/pages/HomeSelection.tsx` |
+| 超大实时时钟 (渐变文字) | HeroSection → Hero 时钟 | `src/components/pages/HeroSection.tsx` |
+| 荧光绿斜切标签 "作品集 // LKC218" (3D 倾斜+视差+高光扫过+scramble) | HeroSection → 斜切标语 | `src/components/pages/HeroSection.tsx` |
+| 巨型半透明背景字 "Environment Art" (SplitText 字符 stagger 入场) | HeroSection → 大文本 | `src/components/pages/HeroSection.tsx` |
+| 首页顶栏 玻璃态 + 流动渐变 (GSAP 驱动流光线+光晕) | HeroSection → Header | `src/components/pages/HeroSection.tsx` |
+| 首页顶栏 鼠标移动时标题 3D 倾斜+视差 | HeroSection → Header | `src/components/pages/HeroSection.tsx` |
+| Hero 大图轮播 (多张首页大图自动切换) | HeroSection → 背景轮播 | `src/components/pages/HeroSection.tsx` |
+| 点阵噪声覆盖层 (ASCII 字符网格, hover 增密) | HeroSection → 点阵噪声 | `src/components/pages/HeroSection.tsx` |
+| HUD 文本 hover 乱码解码 (scramble 效果) | HeroSection → HUD | `src/components/pages/HeroSection.tsx` |
 | 作品集卡片 (悬停边线展开+中心旋转方框) | HomeSelection → 卡片 | `src/components/pages/HomeSelection.tsx` |
 | 滚动大字字幕条 | HomeSelection → Marquee Divider | `src/components/pages/HomeSelection.tsx` |
 | 画廊入场 clip-path 揭示动画 | Gallery → 全局 | `src/components/pages/Gallery.tsx` |
 | 横向弹性伸缩场景卡片 | Gallery → 场景卡片 | `src/components/pages/Gallery.tsx` |
 | 底部状态栏 (ONLINE / REC / VER) | Gallery → Footer | `src/components/pages/Gallery.tsx` |
 | 场景大图 + 可点击热点圆点 | SceneViewer → 热点层 | `src/components/pages/SceneViewer.tsx` |
+| 热点悬停预览卡片 (跟随鼠标+LERP+旋转) | HotspotPreview | `src/components/pages/HotspotPreview.tsx` |
 | 热点激活时背景变暗+模糊 (GridOverlay 穿透显示) | SceneViewer → 主视口 | `src/components/pages/SceneViewer.tsx` |
 | 四角 L 形瞄准框 | SceneViewer → Reticle | `src/components/pages/SceneViewer.tsx` |
 | 右侧可收起侧边栏 (热点列表) | SceneViewer → Sidebar | `src/components/pages/SceneViewer.tsx` |
@@ -546,6 +636,7 @@ ShimmerBar
 | 3D 十二面体占位模型 (线框+光环+Float浮动) | ModelViewer → PlaceholderModel | `src/components/ui/ModelViewer.tsx` |
 | GLTF 模型加载 (自动居中缩放) | ModelViewer → LoadedModel | `src/components/ui/ModelViewer.tsx` |
 | 全屏3D查看器 (含操作指南) | FullscreenModelViewer | `src/components/ui/FullscreenModelViewer.tsx` |
+| 滚动驱动视频 (ScrollTrigger 缩放+标题淡入) | ScrollVideo | `src/components/ui/ScrollVideo.tsx` |
 | 缓慢移动的彩色光斑背景 | GridOverlay → 能量光斑 | `src/components/layout/GridOverlay.tsx` |
 | 水平扫描线 (垂直循环) | GridOverlay → Scanner Beam | `src/components/layout/GridOverlay.tsx` |
 | 四角闪烁文字 (SYS.MONITOR / TARGET_LOCKED) | GridOverlay → 数据覆盖层 | `src/components/layout/GridOverlay.tsx` |
@@ -564,9 +655,13 @@ ShimmerBar
 ```
 App
  ├── GridOverlay (无依赖)
- ├── HomeSelection (gsap, @gsap/react, useDeviceState)
+ ├── HomeSelection (useDeviceState)
+ │    ├── HeroSection (gsap, @gsap/react, gsap/SplitText, useDeviceState)
+ │    │    └── RollingClock (gsap)
+ │    └── ScrollVideo (gsap, gsap/ScrollTrigger)
  ├── Gallery (gsap, @gsap/react, useDeviceState)
  ├── SceneViewer (gsap, @gsap/react, useDeviceState)
+ │    ├── HotspotPreview (无外部依赖)
  │    └── DetailCard
  │         ├── ModelViewer (@react-three/fiber, @react-three/drei, three)
  │         └── FullscreenModelViewer
@@ -577,7 +672,7 @@ App
 ```
 
 **外部依赖**:
-- `gsap` + `@gsap/react` — 全局动画引擎 (HomeSelection, Gallery, SceneViewer, CustomCursor, RollingClock)
+- `gsap` + `@gsap/react` + `gsap/ScrollTrigger` + `gsap/SplitText` — 全局动画引擎 (HomeSelection, HeroSection, Gallery, SceneViewer, ScrollVideo, CustomCursor, RollingClock)
 - `lucide-react` — 所有图标 (ArrowRight, Square, Crosshair, X, ScanLine, Maximize2, Box, Music, Volume2, VolumeX, ChevronDown, ChevronLeft, ChevronRight, MoveRight, Plus, List, Scan, Maximize 等)
 - `@react-three/fiber` + `@react-three/drei` + `three` — 3D 渲染 (ModelViewer 专用)
 
@@ -590,9 +685,10 @@ App
 | 0 | 背景覆盖层 | GridOverlay |
 | 10 | 主内容区 | `<main>` |
 | 20 | 画廊标题栏 / 场景查看器容器 | Gallery Header / SceneViewer |
-| 30 | 首页顶栏 / 热点交互层 / 瞄准框 | HomeSelection Header / SceneViewer Hotspots & Reticle |
+| 30 | 首页顶栏 / 热点交互层 / 瞄准框 | HeroSection Header / SceneViewer Hotspots & Reticle |
 | 40 | 场景顶部信息栏 | SceneViewer TopBar |
 | 50 | DetailCard / 侧边栏 / 全局控件 | DetailCard, Sidebar, AudioPlayer |
+| 60 | 热点悬停预览 | HotspotPreview |
 | 100 | 全屏转场 / 全屏展开态 | TransitionOverlay, DetailCard 展开态 |
 | 200 | 全屏 3D 查看器 | FullscreenModelViewer |
 | 300 | 自定义光标 | CustomCursor |

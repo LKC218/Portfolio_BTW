@@ -22,13 +22,14 @@ interface GalleryProps {
   onSelect: (scene: Scene) => void;
   onHover?: (color: string | null) => void;
   onBack?: () => void;
+  onSharedTitleBack?: (sourceElement: HTMLElement) => void;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ scenes, collection, onSelect, onHover, onBack }) => {
+const Gallery: React.FC<GalleryProps> = ({ scenes, collection, onSelect, onHover, onBack, onSharedTitleBack }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const headerPulseRef = useRef<HTMLDivElement>(null);
-  const headerTitleRef = useRef<HTMLDivElement>(null);
+  const headerTitleRef = useRef<HTMLButtonElement>(null);
   const headerMetaRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const device = useDeviceState();
@@ -158,20 +159,27 @@ const Gallery: React.FC<GalleryProps> = ({ scenes, collection, onSelect, onHover
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="relative z-10 w-full h-screen overflow-hidden flex flex-col bg-transparent">
+    <div ref={containerRef} data-gallery-root className="relative z-10 w-full h-screen overflow-hidden flex flex-col bg-transparent">
 
       <header ref={headerRef} className={`flex-none flex items-center border-b border-border/10 bg-background/80 backdrop-blur-sm z-20 transition-colors ${isMobileLandscape ? 'h-14' : 'h-16 md:h-24'}`}>
         <div className="w-full px-4 md:px-8 flex justify-between items-center">
 
-            <div ref={headerTitleRef} className="flex flex-col justify-center">
+            <button
+              type="button"
+              ref={headerTitleRef}
+              onClick={(event) => onSharedTitleBack?.(event.currentTarget)}
+              className="group flex flex-col justify-center text-left cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[--gallery-accent] focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              style={{ '--gallery-accent': collection?.color || '#CCFF00' } as React.CSSProperties}
+              title="返回首页"
+            >
                 <div className="flex items-center gap-2 mb-1">
-                    <div ref={headerPulseRef} className="w-1.5 h-1.5 bg-red-500 rounded-sm animate-pulse"></div>
-                    <span className="font-mono text-[9px] text-muted tracking-[0.2em] uppercase">Unity_READY</span>
+                    <div ref={headerPulseRef} className="w-1.5 h-1.5 bg-red-500 rounded-sm animate-pulse group-hover:bg-[--gallery-accent] transition-colors"></div>
+                    <span className="font-mono text-[9px] text-muted tracking-[0.2em] uppercase group-hover:text-[--gallery-accent] transition-colors">Unity_READY</span>
                 </div>
-                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-none text-foreground">
+                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-none text-foreground group-hover:text-[--gallery-accent] transition-colors">
                     {collection ? collection.title : 'GALLERY'} <span className="text-foreground/30 font-light">| {collection ? collection.id : 'DEMO'}</span>
                 </h1>
-            </div>
+            </button>
 
             <div ref={headerMetaRef} className="flex items-center gap-6">
                  <div className="hidden md:flex flex-col items-end text-right">
@@ -245,9 +253,17 @@ const Gallery: React.FC<GalleryProps> = ({ scenes, collection, onSelect, onHover
                         <span className="card-subtitle font-mono text-[9px] text-foreground/50 uppercase tracking-[0.2em]">{scene.subtitle}</span>
                     </div>
 
-                    <h2 className="card-title text-xl sm:text-2xl md:text-4xl font-black text-foreground uppercase leading-[1.1] tracking-normal mb-0 md:max-w-xs break-words">
+                    <button
+                        type="button"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            onSharedTitleBack?.(event.currentTarget);
+                        }}
+                        className="card-title text-left text-xl sm:text-2xl md:text-4xl font-black text-foreground uppercase leading-[1.1] tracking-normal mb-0 md:max-w-xs break-words hover:text-[--accent-color] focus-visible:text-[--accent-color] outline-none transition-colors"
+                        title="返回首页"
+                    >
                         {scene.title}
-                    </h2>
+                    </button>
 
                     <div className="overflow-hidden transition-all duration-500 ease-out max-h-0 opacity-0 group-hover:max-h-48 group-hover:opacity-100 group-hover:mt-4 w-full">
                         <p className="text-[11px] md:text-sm text-muted font-medium leading-relaxed line-clamp-2 md:line-clamp-3 mb-3 md:mb-4 max-w-sm">
