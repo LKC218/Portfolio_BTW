@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback, useRef } from 'react';
 import gsap from 'gsap';
-import { COLLECTIONS, getScenesForCollection } from './constants';
+import { COLLECTIONS, PRELOAD_ASSETS, getScenesForCollection } from './constants';
 import { Scene, Collection, AppState, Hotspot } from './types';
 import GridOverlay from './components/layout/GridOverlay';
 import Gallery from './components/pages/Gallery';
@@ -9,9 +9,11 @@ import SceneViewer from './components/pages/SceneViewer';
 import AudioPlayer from './components/layout/AudioPlayer';
 import HomeSelection from './components/pages/HomeSelection';
 import CustomCursor from './components/layout/CustomCursor';
+import Preloader from './components/layout/Preloader';
 
 const App: React.FC = () => {
   // Start at HOME directly
+  const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
   const [appState, setAppState] = useState<AppState>(AppState.HOME);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [selectedScene, setSelectedScene] = useState<Scene | null>(null);
@@ -178,6 +180,13 @@ const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background transition-colors duration-500">
+      {!isPreloaderComplete && (
+        <Preloader
+          title="作品集"
+          assets={PRELOAD_ASSETS}
+          onComplete={() => setIsPreloaderComplete(true)}
+        />
+      )}
 
 
       {/* Full Screen Transition Overlay */}

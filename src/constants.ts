@@ -28,6 +28,18 @@ const DEFAULT_DETAIL_IMAGES: [string, string, string] = [
   PLACEHOLDER_IMAGES.LANDSCAPE
 ];
 
+export const PRELOAD_ASSETS = Array.from(new Set([
+  assetPath('assets/BTW/BTW_Scenes_1_卡片页.jpg'),
+  assetPath('assets/BTW/BTW_Scenes_3_卡片页.jpg'),
+  assetPath('assets/首页大图.jpg'),
+  assetPath('assets/首页大图2.jpg'),
+  assetPath('assets/首页大图3.jpg'),
+  assetPath('assets/BTW/BTW_Scenes_1_1.jpg'),
+  assetPath('assets/BTW/BTW_Scenes_1_2.jpg'),
+  assetPath('assets/BTW/BTW_Scenes_3_1.jpg'),
+  assetPath('assets/BTW/BTW_Scenes_3_2.jpg'),
+]));
+
 // 背景音乐配置
 export const BGM_CONFIG = {
   url: assetPath('assets/audio/bgm_main.mp3'), 

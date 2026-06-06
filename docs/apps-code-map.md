@@ -76,7 +76,8 @@ Portfolio_BTW/
 │   │   ├── layout/              # 布局组件
 │   │   │   ├── AudioPlayer.tsx  # 音频播放器
 │   │   │   ├── CustomCursor.tsx # 自定义光标（GSAP quickTo 跟随 + 交互态缩放）
-│   │   │   └── GridOverlay.tsx  # 网格覆盖层
+│   │   │   ├── GridOverlay.tsx  # 网格覆盖层
+│   │   │   └── Preloader.tsx    # 首屏资源加载器（混合进度 + 品牌加载动画）
 │   │   ├── pages/               # 页面组件
 │   │   │   ├── Gallery.tsx      # 画廊页面
 │   │   │   ├── HeroSection.tsx  # 首页 Hero 区域（轮播 + 点阵噪声 + 文本 scramble）
@@ -134,7 +135,12 @@ Portfolio_BTW/
 
 ## 核心模块说明
 
-### 1. 音频播放器 (`AudioPlayer.tsx`)
+### 1. 首屏加载器 (`Preloader.tsx`)
+- **功能**: 首次打开时阻塞首页进入，等待首屏关键图片与字体资源完成，显示「作品集」品牌加载动画
+- **特性**: 混合进度计算、图片闪现、底部进度条、`clip-path` 幕布退场、失败资源不永久阻塞、减少动画偏好适配
+- **配置**: `constants.ts` 中的 `PRELOAD_ASSETS`
+
+### 2. 音频播放器 (`AudioPlayer.tsx`)
 - **功能**: 背景音乐播放与控制
 - **特性**: 隐藏功能、键盘快捷键、自动收起、错误处理、页面隐藏/离开时暂停并按用户暂停状态恢复
 - **配置**: `constants.ts` 中的 `BGM_CONFIG`
@@ -217,7 +223,7 @@ Portfolio_BTW/
 - **导出**: `useMouseEffects()` 返回 `{ isSupported, pointer, parallaxTo }`
 
 ### 14. 常量配置 (`constants.ts`)
-- **内容**: 颜色系统、BGM配置、作品集数据、场景数据
+- **内容**: 颜色系统、BGM配置、首屏预加载资源、作品集数据、场景数据
 - **更新**: 2026-05-28 更新了作品集封面路径
 
 ---

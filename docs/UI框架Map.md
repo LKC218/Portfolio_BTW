@@ -9,6 +9,7 @@
 
 ```
 App.tsx (根组件)
+├── Preloader (首屏资源加载器 - 混合进度 + 「作品集」品牌加载动画)
 ├── [全局] 全屏转场覆盖层 (TransitionOverlay)
 ├── GridOverlay (背景覆盖层 - 全局常驻)
 ├── <main> 主内容区 (按 AppState 切换)
@@ -31,6 +32,7 @@ App.tsx (根组件)
 ```
 
 **App 状态管理**:
+- `isPreloaderComplete` — 首屏加载器完成状态，完成前由 Preloader 覆盖并阻塞首页交互
 - `hoveredColor` — 悬停强调色，由 HomeSelection/Gallery 的 `onHover` 驱动，传递给 GridOverlay
 - `activeHotspot` — 热点焦点状态，由 SceneViewer 的 `onHotspotSelect` 驱动，传递给 GridOverlay
 
@@ -41,6 +43,33 @@ App.tsx (根组件)
 | `HOME` | HomeSelection | 初始状态 / 点击"返回首页" |
 | `GALLERY` | Gallery | 在首页点击作品集卡片 |
 | `VIEWER` | SceneViewer | 在画廊点击场景卡片 |
+
+---
+
+## 1.1 首屏加载器 — Preloader
+
+**文件**: `src/components/layout/Preloader.tsx`
+**动画引擎**: GSAP (`gsap`)
+**配置来源**: `src/constants.ts` 的 `PRELOAD_ASSETS`
+
+```
+Preloader
+├── 全屏黑色遮罩 (fixed inset-0, z-[9999], 阻塞首屏交互)
+├── 图片闪现层
+│   └── 首屏关键图片 ×6 (集合封面、首页大图、代表场景图)
+├── 中心品牌标题 "作品集"
+└── 底部加载状态
+    ├── LOADING 标签
+    ├── 000% → 100% 数字进度
+    └── 荧光绿细进度条
+```
+
+**关键逻辑**:
+- 首屏等待 `PRELOAD_ASSETS` 中的图片资源与 `document.fonts.ready`
+- 进度采用混合策略：初始化基础进度 + 资源完成数量推进 + 完成后补齐 100%
+- 图片加载失败会计为完成，避免 GitHub Pages 网络波动导致永久卡住
+- 完成后使用 `clip-path: inset(0% 0% 100% 0%)` 执行幕布退场
+- `prefers-reduced-motion` 时跳过图片闪现和复杂退场，保留基础加载反馈
 
 ---
 
