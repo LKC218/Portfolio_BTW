@@ -15,11 +15,11 @@ export const ACCENT_COLORS = {
 };
 
 export const PLACEHOLDER_IMAGES = {
-  PORTRAIT_1: assetPath('assets/占位符竖板.png'),
-  PORTRAIT_2: assetPath('assets/占位符竖板2.png'),
-  PORTRAIT_3: assetPath('assets/占位符竖板3.png'),
-  PORTRAIT_4: assetPath('assets/占位符竖板4.png'),
-  LANDSCAPE: assetPath('assets/占位符横板.png'),
+  PORTRAIT_1: assetPath('assets/占位符竖板.jpg'),
+  PORTRAIT_2: assetPath('assets/占位符竖板2.jpg'),
+  PORTRAIT_3: assetPath('assets/占位符竖板3.jpg'),
+  PORTRAIT_4: assetPath('assets/占位符竖板4.jpg'),
+  LANDSCAPE: assetPath('assets/占位符横板.jpg'),
 };
 
 const DEFAULT_DETAIL_IMAGES: [string, string, string] = [
@@ -29,15 +29,13 @@ const DEFAULT_DETAIL_IMAGES: [string, string, string] = [
 ];
 
 export const PRELOAD_ASSETS = Array.from(new Set([
-  assetPath('assets/BTW/BTW_Scenes_1_卡片页.jpg'),
+  assetPath('assets/BTW/BTW_Scenes_总页.jpg'),
   assetPath('assets/BTW/BTW_Scenes_3_卡片页.jpg'),
+  assetPath('assets/BTW/BTW_Scenes_2_卡片页.jpg'),
+  assetPath('assets/BTW/BTW_Scenes_1_卡片页.jpg'),
   assetPath('assets/首页大图.jpg'),
   assetPath('assets/首页大图2.jpg'),
   assetPath('assets/首页大图3.jpg'),
-  assetPath('assets/BTW/BTW_Scenes_1_1.jpg'),
-  assetPath('assets/BTW/BTW_Scenes_1_2.jpg'),
-  assetPath('assets/BTW/BTW_Scenes_3_1.jpg'),
-  assetPath('assets/BTW/BTW_Scenes_3_2.jpg'),
 ]));
 
 // 背景音乐配置
@@ -59,8 +57,7 @@ export const COLLECTIONS: Collection[] = [
     // image: '/assets/collections/cover_02.jpg',
     image: PLACEHOLDER_IMAGES.PORTRAIT_2 },
   { id: 'C-03', title: 'BTW_垂直通道', subtitle: 'THE WASTELANDS', description: '垂直燃料管道。', color: ACCENT_COLORS.ELECTRIC_BLUE,
-    // image: '/assets/collections/cover_03.jpg',
-    image: PLACEHOLDER_IMAGES.PORTRAIT_3 },
+    image: assetPath('assets/BTW/BTW_Scenes_3_卡片页.jpg') },
   
   // --- PAGE 2 ---
   { id: 'C-04', title: '数字虚空', subtitle: 'DIGITAL VOID', description: '深层网络节点。', color: ACCENT_COLORS.ELECTRIC_BLUE,

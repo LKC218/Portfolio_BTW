@@ -182,7 +182,7 @@ const App: React.FC = () => {
     <div className="relative min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background transition-colors duration-500">
       {!isPreloaderComplete && (
         <Preloader
-          title="作品集"
+          title="PORTFOLIO"
           assets={PRELOAD_ASSETS}
           onComplete={() => setIsPreloaderComplete(true)}
         />
