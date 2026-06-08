@@ -152,7 +152,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ hotspot, onClose, sceneTitle, a
                  </button>
 
                  {/* Large Image / 3D Viewport */}
-                 <div className="flex-1 relative bg-black flex items-center justify-center overflow-hidden group/modal-img">
+                 <div className={`flex-1 min-h-0 relative bg-black flex items-center justify-center overflow-hidden group/modal-img ${isLandscape ? '' : 'min-h-[42dvh] md:min-h-[520px]'}`}>
                     <>
                         <ModelViewer accentColor={accentColor} modelUrl={hotspot.modelUrl} showHud={true} hudPadding="48px" />
                         <button

@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { COLLECTIONS, PRELOAD_ASSETS, getScenesForCollection } from './constants';
 import { Scene, Collection, AppState, Hotspot } from './types';
@@ -19,6 +19,7 @@ const App: React.FC = () => {
   const [selectedScene, setSelectedScene] = useState<Scene | null>(null);
   const [isSharedTitleTransitioning, setIsSharedTitleTransitioning] = useState(false);
   const sharedTitleCloneRef = useRef<HTMLElement | null>(null);
+  const transitionTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   
   // Ambient Color State (Driven by Hover in Gallery/Home or Selection in Viewer)
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
@@ -34,31 +35,37 @@ const App: React.FC = () => {
   // Priority: Hovered Color -> Selected Scene Color -> Selected Collection Color -> Default Cyan
   const currentAmbientColor = hoveredColor || selectedScene?.color || selectedCollection?.color || null;
 
+  const clearTransitionTimers = useCallback(() => {
+      transitionTimersRef.current.forEach(clearTimeout);
+      transitionTimersRef.current = [];
+  }, []);
+
   // Shared function to handle navigation with slide transition
-  const navigate = (targetState: AppState, targetScene: Scene | null, color: string) => {
+  const navigate = useCallback((targetState: AppState, targetScene: Scene | null, color: string) => {
+    clearTransitionTimers();
     setTransitionColor(color);
     setTransitionStatus('in');
 
     // Reset hotspot when navigating
     setActiveHotspot(null);
 
-    // Wait for slide-in to complete (matches CSS duration + delay)
-    setTimeout(() => {
+    const switchTimer = setTimeout(() => {
         setAppState(targetState);
         setSelectedScene(targetScene);
-        
-        // Reset hover state if navigation completes
         setHoveredColor(null);
-
-        // Start slide-out
         setTransitionStatus('out');
 
-        // Cleanup after slide-out completes
-        setTimeout(() => {
+        const cleanupTimer = setTimeout(() => {
             setTransitionStatus('idle');
+            transitionTimersRef.current = transitionTimersRef.current.filter(timer => timer !== cleanupTimer);
         }, 700);
+
+        transitionTimersRef.current.push(cleanupTimer);
+        transitionTimersRef.current = transitionTimersRef.current.filter(timer => timer !== switchTimer);
     }, 700);
-  };
+
+    transitionTimersRef.current.push(switchTimer);
+  }, [clearTransitionTimers]);
 
   const handleSelectCollection = useCallback((collection: Collection) => {
     setSelectedCollection(collection);
@@ -85,6 +92,13 @@ const App: React.FC = () => {
       sharedTitleCloneRef.current.remove();
       sharedTitleCloneRef.current = null;
   }, []);
+
+  useEffect(() => {
+      return () => {
+          clearTransitionTimers();
+          clearSharedTitleClone();
+      };
+  }, [clearSharedTitleClone, clearTransitionTimers]);
 
   const handleSharedTitleBackToHome = useCallback((sourceElement: HTMLElement) => {
       if (isSharedTitleTransitioning || appState === AppState.HOME) return;

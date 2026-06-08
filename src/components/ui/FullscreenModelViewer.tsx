@@ -58,7 +58,7 @@ const FullscreenModelViewer: React.FC<FullscreenModelViewerProps> = ({
         </button>
 
         {/* 3D Viewport (Full Area) */}
-        <div className={`flex-1 relative bg-black/80 ${isLandscape ? 'min-h-0' : 'min-h-[40vh] sm:min-h-[50vh] md:min-h-0'}`}>
+        <div className={`flex-1 min-h-0 relative bg-black/80 ${isLandscape ? '' : 'min-h-[42dvh] sm:min-h-[50dvh] md:min-h-0'}`}>
           <ModelViewer accentColor={accentColor} modelUrl={modelUrl} showHud={true} hudPadding="48px" />
 
           {/* Top-Left Badge */}

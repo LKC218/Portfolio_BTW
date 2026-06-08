@@ -192,6 +192,8 @@ const Preloader: React.FC<PreloaderProps> = ({ assets, title, onComplete }) => {
     let visualProgress = 0;
     let targetProgress = 10;
     let rafId = 0;
+    let finishTimerId = 0;
+    let exitTimeline: gsap.core.Timeline | null = null;
 
     const setTargetFromUnits = () => {
       targetProgress = 10 + Math.round((completedUnits / totalUnits) * 83);
@@ -224,8 +226,14 @@ const Preloader: React.FC<PreloaderProps> = ({ assets, title, onComplete }) => {
           setProgress(Math.round(progressValueRef.current.value));
         },
         onComplete: () => {
+          if (cancelled) return;
           const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          gsap.timeline({ onComplete })
+          exitTimeline = gsap.timeline({
+            onComplete: () => {
+              if (!cancelled) onComplete();
+            }
+          });
+          exitTimeline
             .to('.preloader-counter', reduceMotion ? {
               autoAlpha: 0,
               duration: 0.14,
@@ -308,12 +316,15 @@ const Preloader: React.FC<PreloaderProps> = ({ assets, title, onComplete }) => {
       if (cancelled) return;
       const elapsed = performance.now() - startedAt;
       const remaining = Math.max(0, MIN_VISIBLE_MS - elapsed);
-      window.setTimeout(finish, remaining);
+      finishTimerId = window.setTimeout(finish, remaining);
     });
 
     return () => {
       cancelled = true;
+      window.clearTimeout(finishTimerId);
       cancelAnimationFrame(rafId);
+      exitTimeline?.kill();
+      gsap.killTweensOf(progressValueRef.current);
     };
   }, [assets, onComplete]);
 

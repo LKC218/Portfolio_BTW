@@ -22,6 +22,7 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
+  const isReadyRef = useRef(false);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({
     video.muted = true;
 
     const handleCanPlay = () => {
+      isReadyRef.current = true;
       setIsReady(true);
       video.play().catch(() => {});
     };
@@ -43,7 +45,7 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({
     // ---- IntersectionObserver：离屏暂停 ----
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!isReady) return;
+        if (!isReadyRef.current) return;
         entry.isIntersecting ? video.play().catch(() => {}) : video.pause();
       },
       { threshold: 0.1 }
@@ -92,8 +94,10 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({
     }, container);
 
     return () => {
+      isReadyRef.current = false;
       ctx.revert();
       observer.disconnect();
+      video.pause();
       video.removeEventListener('canplay', handleCanPlay);
     };
   }, []);

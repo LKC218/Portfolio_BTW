@@ -8,7 +8,7 @@
  * - 集成 HeroSection 展示大图轮播
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Collection } from '../../types';
 import { ArrowRight, Square, Maximize2, Minimize2 } from 'lucide-react';
 import { useDeviceState } from '../../hooks/useDeviceState';
@@ -71,12 +71,22 @@ const HomeSelection: React.FC<HomeSelectionProps> = ({ collections, onSelect, on
   // 窗口滚动监听（方案A：整页自然滚动）
   // ============================================
   useEffect(() => {
+    let rafId = 0;
+
     const handleWindowScroll = () => {
-      setScrollTop(window.scrollY);
+      if (rafId) return;
+
+      rafId = requestAnimationFrame(() => {
+        setScrollTop(window.scrollY);
+        rafId = 0;
+      });
     };
 
     window.addEventListener('scroll', handleWindowScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleWindowScroll);
+    return () => {
+      window.removeEventListener('scroll', handleWindowScroll);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   /** 切换全屏状态 */
@@ -97,10 +107,13 @@ const HomeSelection: React.FC<HomeSelectionProps> = ({ collections, onSelect, on
   // ============================================
   
   /** 将作品集分组 */
-  const chunkedCollections = [];
-  for (let i = 0; i < collections.length; i += ITEMS_PER_GROUP) {
-    chunkedCollections.push(collections.slice(i, i + ITEMS_PER_GROUP));
-  }
+  const chunkedCollections = useMemo(() => {
+    const groups: Collection[][] = [];
+    for (let i = 0; i < collections.length; i += ITEMS_PER_GROUP) {
+      groups.push(collections.slice(i, i + ITEMS_PER_GROUP));
+    }
+    return groups;
+  }, [collections]);
 
   // ============================================
   // 渲染

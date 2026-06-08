@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect, Suspense, useCallback, useMemo } from 'react';
+import React, { useRef, useState, useEffect, Suspense, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Float, MeshDistortMaterial, useGLTF, Html } from '@react-three/drei';
+import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 
 interface ModelViewerProps {
@@ -118,29 +119,37 @@ function useResolvedModelUrl(modelUrl?: string): string | null {
   const [resolvedUrl, setResolvedUrl] = useState<string | null>(null);
   const [checked, setChecked] = useState(false);
 
-  const checkUrl = useCallback(async (url: string) => {
-    try {
-      const response = await fetch(url, { method: 'HEAD' });
-      const contentType = response.headers.get('content-type') || '';
-      if (response.ok && !contentType.includes('text/html')) {
-        setResolvedUrl(url);
-      } else {
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+
+    const checkUrl = async (url: string) => {
+      setChecked(false);
+      try {
+        const response = await fetch(url, { method: 'HEAD', signal: controller.signal });
+        if (!active) return;
+
+        const contentType = response.headers.get('content-type') || '';
+        setResolvedUrl(response.ok && !contentType.includes('text/html') ? url : null);
+      } catch (error) {
+        if (!active || controller.signal.aborted) return;
         setResolvedUrl(null);
       }
-    } catch {
-      setResolvedUrl(null);
-    }
-    setChecked(true);
-  }, []);
+      setChecked(true);
+    };
 
-  useEffect(() => {
     if (modelUrl) {
       checkUrl(modelUrl);
     } else {
       setResolvedUrl(null);
       setChecked(true);
     }
-  }, [modelUrl, checkUrl]);
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [modelUrl]);
 
   if (!modelUrl) return null;
   if (!checked) return null;
@@ -149,7 +158,7 @@ function useResolvedModelUrl(modelUrl?: string): string | null {
 
 const ModelViewer: React.FC<ModelViewerProps> = ({ accentColor, modelUrl, className = '', showHud = true, hudPadding = '12px' }) => {
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const resolvedUrl = useResolvedModelUrl(modelUrl);
 
   useEffect(() => {
@@ -170,7 +179,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ accentColor, modelUrl, classN
   }, []);
 
   return (
-    <div className={`relative w-full h-full ${className}`}>
+    <div className={`relative w-full h-full min-h-0 overflow-hidden ${className}`}>
       <Canvas
         camera={{ position: [3, 2, 5], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
