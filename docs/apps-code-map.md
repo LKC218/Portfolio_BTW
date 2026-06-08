@@ -30,14 +30,19 @@
 ### 3. 3D 模型查看器功能实现
 - **路径**: `docs/3D模型查看器-功能实现-260601.md`
 - **内容**: 3D 模型查看器的完整功能架构、组件设计、交互流程
-- **当前口径**: DetailCard 浮动卡片显示 `detailImage` 缩略图；展开态始终渲染 ModelViewer。`modelUrl` 有效时加载 GLTF；无效或不存在时显示十二面体占位模型。
+- **当前口径**: DetailCard 浮动卡片显示 `detailImage` 缩略图；展开态始终渲染 ModelViewer。`modelUrl` 有效时加载 GLTF；无效或不存在时显示十二面体占位模型。移动端展开态与独立全屏态为 3D 视口设置 `dvh` 最小高度，避免 Canvas 在移动端 flex 布局中高度塌陷。
 
 ### 4. UI 框架 Map
 - **路径**: `docs/UI框架Map.md`
 - **内容**: 前端 UI 结构化导航，全局层级架构、页面级/组件级 UI 元素拆解、视觉特征反查索引
 - **适用场景**: 快速定位界面元素对应的组件名与文件路径，支持人工查阅和 AI 上下文注入
 
-### 5. 已实现的方案
+### 5. 颜色语言文档
+- **路径**: `docs/颜色语言文档-260608.md`
+- **内容**: 当前页面颜色语言、基础色板、强调色板、动态场景色、环境光、预加载独立色板、交互用色规则与代码落点
+- **适用场景**: 后续新增 UI 模块、调整主题氛围、统一强调色语义、检查硬编码颜色时参考
+
+### 6. 已实现的方案
 - **路径**: `docs/已实现的方案/字体乱码解码与点阵字符扰动方案-260603.md`
 - **内容**: 首页字体乱码解码、CTA 标语 scramble、白点点阵 ASCII 字符扰动的实现参数、复用步骤和注意事项
 - **适用场景**: 后续复用终端风格字体动效、HUD 小字 hover 解码、低透明点阵字符扰动
@@ -51,6 +56,7 @@ Portfolio_BTW/
 ├── docs/                          # 文档目录
 │   ├── apps-code-map.md           # 本文档 - 项目文档导航
 │   ├── UI框架Map.md               # UI 框架结构化导航
+│   ├── 颜色语言文档-260608.md      # 当前页面颜色语言、色板与用色规则
 │   ├── 功能更新记录-260603.md      # 功能更新记录与当前状态勘误
 │   ├── 3D模型查看器-功能实现-260601.md
 │   ├── 已实现的方案/
@@ -86,8 +92,6 @@ Portfolio_BTW/
 │   ├── hooks/
 │   │   ├── useDeviceState.ts
 │   │   └── useMouseEffects.ts
-│   ├── services/
-│   │   └── geminiService.ts
 │   ├── App.tsx
 │   ├── constants.ts
 │   ├── index.tsx
@@ -116,12 +120,10 @@ Portfolio_BTW/
 - **当前仓库状态**: 未提供 `.env` / `.env.example`。
 - **配置项**:
   - `PORT`: Vite 开发服务器端口，默认 `3000`。
-  - `GEMINI_API_KEY`: 通过 `vite.config.ts` 的 `define` 注入到 `process.env.API_KEY` 与 `process.env.GEMINI_API_KEY`。
 
 ### 2. Vite 配置 (`vite.config.ts`)
 - `base: '/Portfolio_BTW/'`，用于适配 GitHub Pages / 子路径部署。
 - `server.port` 读取 `PORT`，未配置时默认 `3000`；`host: '0.0.0.0'`；`open: true`。
-- `define` 注入 `GEMINI_API_KEY`。
 - `build.rollupOptions.output.manualChunks` 拆分 `vendor-three` 与 `vendor-gsap`。
 - 资源路径通过 `assetPath()` / `import.meta.env.BASE_URL` 适配部署路径，避免硬编码根路径在子目录部署失效。
 
@@ -138,6 +140,7 @@ Portfolio_BTW/
 | `dev` | `vite` | 启动开发服务器 |
 | `start` | `vite` | 启动开发服务器别名 |
 | `build` | `vite build` | 生产构建 |
+| `typecheck` | `tsc --noEmit` | TypeScript 类型检查 |
 | `preview` | `vite preview` | 预览构建产物 |
 
 ### 5. 主要依赖
@@ -146,7 +149,6 @@ Portfolio_BTW/
 - GSAP / @gsap/react
 - Three.js / @react-three/fiber / @react-three/drei
 - lucide-react
-- @google/genai
 
 ---
 
@@ -205,7 +207,7 @@ Portfolio_BTW/
 ### 8. 滚动驱动视频 (`ScrollVideo.tsx`)
 - **功能**: GSAP ScrollTrigger 驱动的视频展示组件。
 - **播放策略**: `canplay` 后调用 `video.play().catch(() => {})`；`loop` / `muted` 由程序设置；JSX 设置 `preload="auto"`、`muted`、`playsInline`。
-- **可见性控制**: `IntersectionObserver` 入屏播放、离屏暂停。
+- **可见性控制**: `IntersectionObserver` 入屏播放、离屏暂停；ready 状态通过 ref 给观察器读取，避免闭包持有过期状态。
 - **位置**: HomeSelection 第一组卡片下方。
 
 ### 9. 详情卡片 (`DetailCard.tsx`)
@@ -222,6 +224,7 @@ Portfolio_BTW/
 - **模型解析**: `useResolvedModelUrl` 通过 HEAD 请求验证 `modelUrl`，拒绝 `text/html` 响应；有效时加载 GLTF，无效或为空时渲染占位模型。
 - **占位模型**: 十二面体 + MeshDistortMaterial + 线框外壳 + 内外环光。
 - **交互**: OrbitControls 旋转/缩放，禁止平移，距离 `3-12`。
+- **移动端尺寸**: 根容器保持 `w-full h-full min-h-0 overflow-hidden`，由外层展开态或全屏态提供稳定高度，避免 Canvas 高度塌陷。
 
 ### 11. 全屏 3D 模型弹窗 (`FullscreenModelViewer.tsx`)
 - **功能**: 独立全屏 3D 模型查看器。
@@ -229,6 +232,7 @@ Portfolio_BTW/
   - 桌面端左右分栏，信息面板宽 `340px`。
   - 移动横屏信息面板宽 `38%`。
   - 普通移动端信息面板 `max-h-[55vh]`，顶部拖拽手柄。
+  - 普通移动端 3D 视口使用 `42dvh ~ 50dvh` 最小高度，适配移动浏览器动态视口。
 - **操作指南**: 桌面显示“滚轮 → 缩放视图”；移动端切换为“双指捏合 → 缩放视图”。
 
 ### 12. 自定义光标 (`CustomCursor.tsx`)

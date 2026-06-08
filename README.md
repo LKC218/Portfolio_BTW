@@ -20,6 +20,7 @@ http://localhost:3000/
 ## 构建
 
 ```powershell
+npm run typecheck
 npm run build
 ```
 
@@ -69,6 +70,6 @@ GitHub Actions
 
 ## 环境变量安全
 
-项目中预留了 Gemini API Key 读取逻辑。不要将真实 `.env`、`.env.local` 或 API Key 提交到仓库。
+不要将真实 `.env`、`.env.local` 或任何 API Key 提交到仓库。
 
 当前 `.gitignore` 已忽略环境变量文件。

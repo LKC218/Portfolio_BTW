@@ -43,6 +43,14 @@ App.tsx (根组件)
 - `isSharedTitleTransitioning` — Gallery 标题共享元素回 HOME 转场锁定状态。
 - `sharedTitleCloneRef` — App 克隆标题元素后的 DOM 引用。
 
+### 全局颜色语言
+
+- 基础暗色变量由 `index.html` 提供：`background`、`surface`、`foreground`、`muted`、`border`。
+- Collection 与 Scene 的强调色由 `src/constants.ts` 的 `ACCENT_COLORS`、`COLLECTIONS[].color`、`getScenesForCollection()` 统一派生。
+- `hoveredColor`、`selectedCollection.color`、`selectedScene.color` 会驱动 GridOverlay 环境光与转场色。
+- 首页以 `#CCFF00` 酸性绿作为主视觉；GridOverlay 默认使用 `#00F0FF` 与 `#FF003C` 形成冷蓝扫描和红色警戒。
+- 完整色彩语义、色板、交互规则见 `docs/颜色语言文档-260608.md`。
+
 ### 状态路由
 
 | AppState 枚举 | 显示页面 | 触发方式 |
